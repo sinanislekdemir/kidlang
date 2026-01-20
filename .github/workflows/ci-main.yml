@@ -1,0 +1,31 @@
+name: CI Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+      
+      - name: Run lint
+        working-directory: ./engine
+        run: make lint
+      
+      - name: Run tests
+        working-directory: ./engine
+        run: make test
+      
+      - name: Build release
+        working-directory: ./engine
+        run: make release
