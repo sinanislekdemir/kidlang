@@ -402,28 +402,28 @@ func (ide *UnixIDE) showExampleFiles(dir string) bool {
 // Returns: true if should continue with action, false if cancelled
 func (ide *UnixIDE) promptSaveChanges() bool {
 	t := getIDETranslation()
-	
+
 	ide.screen.Clear()
 	ide.screen.ColorOn(1)
 	for row := 0; row < ide.maxY; row++ {
 		ide.screen.MovePrint(row, 0, strings.Repeat(" ", ide.maxX))
 	}
-	
+
 	centerY := ide.maxY / 2
 	centerX := (ide.maxX - len([]rune(t.MsgSaveChanges))) / 2
-	
+
 	ide.screen.ColorOn(2)
 	ide.screen.MovePrint(centerY, centerX, t.MsgSaveChanges)
 	ide.screen.ColorOff(2)
-	
+
 	// Show options: Yes (Y) / No (N) / Cancel (ESC)
 	options := "Y = Yes, N = No, ESC = Cancel"
 	optX := (ide.maxX - len([]rune(options))) / 2
 	ide.screen.MovePrint(centerY+2, optX, options)
-	
+
 	ide.screen.ColorOff(1)
 	ide.screen.Refresh()
-	
+
 	for {
 		ch := ide.screen.GetChar()
 		switch ch {

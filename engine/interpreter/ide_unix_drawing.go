@@ -39,14 +39,14 @@ func (ide *UnixIDE) draw() {
 	// Draw editor area with black background
 	ide.screen.ColorOn(1)
 	editorHeight := ide.maxY - 2 // Reserve space for menu and status bar
-	
+
 	// Show welcome text if enabled and no content
 	if ide.showWelcome && len(ide.lines) == 1 && ide.lines[0] == "" {
 		t := getIDETranslation()
 		for row := 0; row < editorHeight; row++ {
 			ide.screen.Move(row+1, 0)
 			ide.screen.Print(strings.Repeat(" ", ide.maxX))
-			
+
 			if row < len(t.WelcomeText) {
 				line := t.WelcomeText[row]
 				startX := (ide.maxX - len([]rune(line))) / 2

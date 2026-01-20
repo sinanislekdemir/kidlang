@@ -15,7 +15,7 @@ func (ide *UnixIDE) handleInput(key goncurses.Key) {
 	if ide.showWelcome && key != goncurses.KEY_MOUSE && key > 0 {
 		ide.showWelcome = false
 	}
-	
+
 	// Handle mouse events
 	if key == goncurses.KEY_MOUSE {
 		ide.handleMouse()

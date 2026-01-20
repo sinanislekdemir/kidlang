@@ -19,12 +19,12 @@ func Print(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 			// Strip trailing colons, commas, periods from references
 			cleaned := strings.TrimRight(arg.String, ":,.")
 			suffix := arg.String[len(cleaned):]
-			
+
 			cleanedArguments = append(cleanedArguments, VariableBox{
 				VariableType: TYPE_REFERENCE,
 				String:       cleaned,
 			})
-			
+
 			// If there was punctuation, add it as a separate string argument
 			if suffix != "" {
 				cleanedArguments = append(cleanedArguments, VariableBox{

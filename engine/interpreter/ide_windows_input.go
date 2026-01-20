@@ -98,7 +98,7 @@ func (ide *WindowsIDE) handleInput(key keyEventRecord) bool {
 	if ide.showWelcome && key.UnicodeChar > 0 {
 		ide.showWelcome = false
 	}
-	
+
 	// Check for Ctrl+C to quit
 	if key.UnicodeChar == 3 || (key.VirtualKeyCode == 'C' && (key.ControlKeyState&0x0008) != 0) { // Ctrl pressed
 		return false // Exit
@@ -368,7 +368,7 @@ func (ide *WindowsIDE) executeSubmenuAction() {
 				if !ide.promptSaveChanges() {
 					ide.menuActive = false
 					ide.submenuActive = false
-					return true
+					return
 				}
 			}
 			os.Exit(0)

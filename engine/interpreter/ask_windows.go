@@ -18,12 +18,12 @@ func ensureConsoleInputMode() {
 	if err != nil {
 		return // Not a console, probably redirected
 	}
-	
+
 	// Enable line input and echo for normal Ask operation
 	mode |= windows.ENABLE_LINE_INPUT
 	mode |= windows.ENABLE_ECHO_INPUT
 	mode |= windows.ENABLE_PROCESSED_INPUT
-	
+
 	windows.SetConsoleMode(stdin, mode)
 }
 

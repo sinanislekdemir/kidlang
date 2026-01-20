@@ -186,7 +186,7 @@ func (ide *WindowsIDE) drawMenuBar() {
 		menuText := " " + menu + " "
 		screenBuf.writeString(x, 0, menuText, color)
 		x += len([]rune(menuText))
-		
+
 		// Add space between menus
 		if i < len(menus)-1 {
 			screenBuf.set(x, 0, ' ', colorBlackOnWhite)
@@ -203,7 +203,7 @@ func (ide *WindowsIDE) drawMenuBar() {
 // drawEditor draws the main editor area with line numbers
 func (ide *WindowsIDE) drawEditor() {
 	editorHeight := ide.maxY - 4
-	
+
 	// Show welcome text if enabled and no content
 	if ide.showWelcome && len(ide.lines) == 1 && ide.lines[0] == "" {
 		t := getIDETranslation()
@@ -251,55 +251,55 @@ func (ide *WindowsIDE) drawEditor() {
 
 // drawHighlightedLineAt draws a line with syntax highlighting at a specific position
 func (ide *WindowsIDE) drawHighlightedLineAt(startX, y int, line string) {
-t := getIDETranslation()
-keywords := t.SyntaxKeywords
+	t := getIDETranslation()
+	keywords := t.SyntaxKeywords
 
-x := startX
+	x := startX
 
-// Check if line starts with REM (comment)
-if len(line) >= 3 && strings.ToUpper(line[:3]) == "REM" {
-screenBuf.writeString(x, y, line, colorGreen)
-x += len([]rune(line))
-// Clear rest of line
-for ; x < ide.maxX; x++ {
-screenBuf.set(x, y, ' ', colorWhite)
-}
-return
-}
+	// Check if line starts with REM (comment)
+	if len(line) >= 3 && strings.ToUpper(line[:3]) == "REM" {
+		screenBuf.writeString(x, y, line, colorGreen)
+		x += len([]rune(line))
+		// Clear rest of line
+		for ; x < ide.maxX; x++ {
+			screenBuf.set(x, y, ' ', colorWhite)
+		}
+		return
+	}
 
-words := splitPreservingSpaces(line)
+	words := splitPreservingSpaces(line)
 
-for _, word := range words {
-if x >= ide.maxX {
-break
-}
+	for _, word := range words {
+		if x >= ide.maxX {
+			break
+		}
 
-// Check if it's a keyword
-wordUpper := strings.ToUpper(word)
-if keywords[wordUpper] {
-screenBuf.writeString(x, y, word, colorYellow)
-} else {
-var color uint16
-// Check if it's a string (starts with quote)
-if len(word) > 0 && word[0] == '"' {
-color = colorCyan
-} else if len(word) > 0 && word[0] >= '0' && word[0] <= '9' {
-// Number
-color = colorMagenta
-} else {
-// Default
-color = colorWhite
-}
-screenBuf.writeString(x, y, word, color)
-}
+		// Check if it's a keyword
+		wordUpper := strings.ToUpper(word)
+		if keywords[wordUpper] {
+			screenBuf.writeString(x, y, word, colorYellow)
+		} else {
+			var color uint16
+			// Check if it's a string (starts with quote)
+			if len(word) > 0 && word[0] == '"' {
+				color = colorCyan
+			} else if len(word) > 0 && word[0] >= '0' && word[0] <= '9' {
+				// Number
+				color = colorMagenta
+			} else {
+				// Default
+				color = colorWhite
+			}
+			screenBuf.writeString(x, y, word, color)
+		}
 
-x += len([]rune(word))
-}
+		x += len([]rune(word))
+	}
 
-// Clear rest of line
-for ; x < ide.maxX; x++ {
-screenBuf.set(x, y, ' ', colorWhite)
-}
+	// Clear rest of line
+	for ; x < ide.maxX; x++ {
+		screenBuf.set(x, y, ' ', colorWhite)
+	}
 }
 
 // drawStatusBar draws the status bar
@@ -364,7 +364,7 @@ func (ide *WindowsIDE) drawSubmenu() {
 	x := 0
 	for i := 0; i < ide.menuSelected && i < len(menuItems); i++ {
 		x += len([]rune(menuItems[i])) + 2 // " Item "
-		x += 1                              // Space after each menu (matching menu bar drawing)
+		x += 1                             // Space after each menu (matching menu bar drawing)
 	}
 	y := 1
 
