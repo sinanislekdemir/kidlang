@@ -1,0 +1,7 @@
+#!/bin/bash
+# Setup for seek test
+cat > /tmp/kidlang_seek_test.txt << 'EOF'
+Line 1
+Line 2
+Line 3
+EOF

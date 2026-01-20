@@ -1,0 +1,3 @@
+#!/bin/bash
+# Setup for ask command test - provides input
+echo "42" > /tmp/kidlang_test_input.txt

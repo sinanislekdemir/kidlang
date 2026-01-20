@@ -1,0 +1,7 @@
+#!/bin/bash
+# Setup for readline test
+cat > /tmp/kidlang_readline_test.txt << 'EOF'
+First line
+Second line
+Third line
+EOF

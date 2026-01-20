@@ -1,0 +1,7 @@
+#!/bin/bash
+# Setup for stack file read test
+cat > /tmp/kidlang_test_data.txt << 'EOF'
+100
+3.14
+TestData
+EOF

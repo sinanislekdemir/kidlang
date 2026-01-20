@@ -1,0 +1,4 @@
+int equals float
+int less than float
+float greater than int
+string equals int
