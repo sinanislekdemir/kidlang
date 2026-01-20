@@ -29,3 +29,7 @@ jobs:
       - name: Build release
         working-directory: ./engine
         run: make release
+      
+      - name: Run integration tests
+        working-directory: ./tests
+        run: ./test.sh
