@@ -25,6 +25,10 @@ jobs:
       - name: Run tests
         working-directory: ./engine
         run: make test
+
+      - name: Run code tests
+        working-directory: ./tests
+        run: ./test.sh
       
       - name: Build release
         working-directory: ./engine
