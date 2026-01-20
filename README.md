@@ -7,7 +7,7 @@
 - **Kid-Friendly Syntax**: Uses simple, everyday words that children understand
 - **Forgiving Nature**: Doesn't punish kids for minor mistakes like case sensitivity or missing quotes
 - **Multilingual**: Available in English, Turkish, Finnish, and German
-- **Visual IDE**: Beautiful Qt-based IDE with syntax highlighting and integrated terminal
+- **Visual IDE**: Beautiful Curses IDE with syntax highlighting and integrated terminal
 - **Learn by Doing**: Comes with 15+ example programs to learn from
 
 ## ✨ Key Features
