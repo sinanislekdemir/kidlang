@@ -107,32 +107,6 @@ cd engine
 go test
 ```
 
-### UI (Visual IDE)
-
-The KidLang IDE is built with Qt5/C++.
-
-**Prerequisites:**
-- Qt5 development libraries
-- C++ compiler (g++)
-- make
-
-**On Ubuntu/Debian:**
-```bash
-sudo apt-get install qt5-default qtbase5-dev g++ make
-```
-
-**Build:**
-```bash
-cd ui
-qmake
-make
-```
-
-**Run:**
-```bash
-./kidlang-ide
-```
-
 ## 📚 Learning Resources
 
 ### Tutorials (Step-by-Step Learning)
