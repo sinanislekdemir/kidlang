@@ -21,6 +21,18 @@
 - **Control Flow**: Simple if/goto for logic, loops for repetition
 - **Comments**: Use `//` to add notes to your code
 
+## 📷 Screenshots!
+
+| | | |
+|---|---|---|
+| [<img src="https://github.com/user-attachments/assets/fc16a888-502e-4e95-8a55-ab7d94c01780" width="220"/>](https://github.com/user-attachments/assets/fc16a888-502e-4e95-8a55-ab7d94c01780) | [<img src="https://github.com/user-attachments/assets/699b7e9f-d9ef-439d-b00f-ddaee57a230d" width="220"/>](https://github.com/user-attachments/assets/699b7e9f-d9ef-439d-b00f-ddaee57a230d) | [<img src="https://github.com/user-attachments/assets/203655c6-a385-4cb6-aa3d-10385178c535" width="220"/>](https://github.com/user-attachments/assets/203655c6-a385-4cb6-aa3d-10385178c535) |
+| [<img src="https://github.com/user-attachments/assets/c09ff2c7-8c1a-420b-b7c5-32fc3b218902" width="220"/>](https://github.com/user-attachments/assets/c09ff2c7-8c1a-420b-b7c5-32fc3b218902) | [<img src="https://github.com/user-attachments/assets/bdfe5a2f-08e0-4f65-bb41-db55c6862948" width="220"/>](https://github.com/user-attachments/assets/bdfe5a2f-08e0-4f65-bb41-db55c6862948) | [<img src="https://github.com/user-attachments/assets/b41225a3-37c0-48ee-8d9e-6bca26184397" width="220"/>](https://github.com/user-attachments/assets/b41225a3-37c0-48ee-8d9e-6bca26184397) |
+| [<img src="https://github.com/user-attachments/assets/c1e16c84-2bc8-4a5b-be43-d148f02b9a69" width="220"/>](https://github.com/user-attachments/assets/c1e16c84-2bc8-4a5b-be43-d148f02b9a69) | | |
+
+
+
+
+
 ## 🚀 Quick Start
 
 ### Hello World
