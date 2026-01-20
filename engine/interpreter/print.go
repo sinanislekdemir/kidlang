@@ -12,7 +12,32 @@ func Print(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 		outIo = os.Stdout
 	}
 
-	localArguments, err := processArguments(memory, arguments)
+	// Make print forgiving: strip trailing punctuation from variable references
+	cleanedArguments := make([]VariableBox, 0, len(arguments))
+	for _, arg := range arguments {
+		if arg.VariableType == TYPE_REFERENCE {
+			// Strip trailing colons, commas, periods from references
+			cleaned := strings.TrimRight(arg.String, ":,.")
+			suffix := arg.String[len(cleaned):]
+			
+			cleanedArguments = append(cleanedArguments, VariableBox{
+				VariableType: TYPE_REFERENCE,
+				String:       cleaned,
+			})
+			
+			// If there was punctuation, add it as a separate string argument
+			if suffix != "" {
+				cleanedArguments = append(cleanedArguments, VariableBox{
+					VariableType: TYPE_STRING,
+					String:       suffix,
+				})
+			}
+		} else {
+			cleanedArguments = append(cleanedArguments, arg)
+		}
+	}
+
+	localArguments, err := processArguments(memory, cleanedArguments)
 	if err != nil {
 		return err
 	}

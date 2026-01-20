@@ -11,6 +11,11 @@ import (
 
 // handleInput processes keyboard input
 func (ide *UnixIDE) handleInput(key goncurses.Key) {
+	// Disable welcome on first keystroke
+	if ide.showWelcome && key != goncurses.KEY_MOUSE && key > 0 {
+		ide.showWelcome = false
+	}
+	
 	// Handle mouse events
 	if key == goncurses.KEY_MOUSE {
 		ide.handleMouse()
@@ -39,14 +44,14 @@ func (ide *UnixIDE) handleInput(key goncurses.Key) {
 				ide.submenuSelected = 0
 				ide.menuSelected--
 				if ide.menuSelected < 0 {
-					ide.menuSelected = 5
+					ide.menuSelected = 4
 				}
 				return
 			case goncurses.KEY_RIGHT:
 				// Move to next menu and keep submenu open
 				ide.submenuSelected = 0
 				ide.menuSelected++
-				if ide.menuSelected > 5 {
+				if ide.menuSelected > 4 {
 					ide.menuSelected = 0
 				}
 				return
@@ -65,12 +70,12 @@ func (ide *UnixIDE) handleInput(key goncurses.Key) {
 			case goncurses.KEY_LEFT:
 				ide.menuSelected--
 				if ide.menuSelected < 0 {
-					ide.menuSelected = 5
+					ide.menuSelected = 4
 				}
 				return
 			case goncurses.KEY_RIGHT:
 				ide.menuSelected++
-				if ide.menuSelected > 5 {
+				if ide.menuSelected > 4 {
 					ide.menuSelected = 0
 				}
 				return
@@ -152,6 +157,10 @@ func (ide *UnixIDE) handleInput(key goncurses.Key) {
 		if ide.cursorX < len(ide.lines[ide.cursorY]) {
 			ide.cursorX++
 		}
+	case goncurses.KEY_HOME:
+		ide.cursorX = 0
+	case goncurses.KEY_END:
+		ide.cursorX = len([]rune(ide.lines[ide.cursorY]))
 	case goncurses.KEY_BACKSPACE, 127:
 		ide.handleBackspace()
 	case goncurses.KEY_DC: // Delete key
@@ -199,21 +208,21 @@ func (ide *UnixIDE) handleMenuSelection() {
 			goncurses.End()
 			os.Exit(0)
 		}
-	case 2: // Run menu
+	case 1: // Run menu
 		switch ide.submenuSelected {
 		case 0: // Run (F5)
 			ide.menuActive = false
 			ide.submenuActive = false
 			ide.Execute()
 		}
-	case 3: // Examples menu
+	case 2: // Examples menu
 		switch ide.submenuSelected {
 		case 0: // Browse Examples
 			ide.menuActive = false
 			ide.submenuActive = false
 			ide.showExamples()
 		}
-	case 4: // Help menu
+	case 3: // Help menu
 		switch ide.submenuSelected {
 		case 0: // About
 			ide.menuActive = false
@@ -228,7 +237,7 @@ func (ide *UnixIDE) handleMenuSelection() {
 			ide.submenuActive = false
 			ide.showKeyboardShortcuts()
 		}
-	case 5: // Language menu
+	case 4: // Language menu
 		ide.menuActive = false
 		ide.submenuActive = false
 		switch ide.submenuSelected {
@@ -299,7 +308,7 @@ func (ide *UnixIDE) handleMouse() {
 // handleMenuBarClick handles clicks on the menu bar
 func (ide *UnixIDE) handleMenuBarClick(x int) {
 	t := getIDETranslation()
-	menuItems := []string{t.MenuFile, t.MenuEdit, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
+	menuItems := []string{t.MenuFile, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
 
 	menuX := 1
 	for i, item := range menuItems {
@@ -330,7 +339,7 @@ func (ide *UnixIDE) handleSubmenuClick(x, y int) {
 
 	// Calculate menu position
 	menuX := 1
-	menuItems := []string{t.MenuFile, t.MenuEdit, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
+	menuItems := []string{t.MenuFile, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
 	for i := 0; i < ide.menuSelected && i < len(menuItems); i++ {
 		menuX += len([]rune(menuItems[i])) + 3
 	}
@@ -340,15 +349,13 @@ func (ide *UnixIDE) handleSubmenuClick(x, y int) {
 	switch ide.menuSelected {
 	case 0: // File
 		items = []string{t.FileNew, t.FileOpen, t.FileSave, t.FileSaveAs, "---", t.FileExit}
-	case 1: // Edit
-		items = []string{t.EditCut, t.EditCopy, t.EditPaste, "---", t.EditClear}
-	case 2: // Run
+	case 1: // Run
 		items = []string{t.RunRun, "---", t.RunStop}
-	case 3: // Examples
+	case 2: // Examples
 		items = []string{t.ExamplesBrowse}
-	case 4: // Help
+	case 3: // Help
 		items = []string{t.HelpAbout, t.HelpDocs, t.HelpShortcuts}
-	case 5: // Language
+	case 4: // Language
 		items = []string{t.LangEnglish, t.LangTurkish, t.LangFinnish, t.LangGerman}
 	}
 

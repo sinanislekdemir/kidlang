@@ -94,6 +94,11 @@ func (ide *WindowsIDE) readKey() keyEventRecord {
 
 // handleInput processes keyboard input
 func (ide *WindowsIDE) handleInput(key keyEventRecord) bool {
+	// Disable welcome on first keystroke
+	if ide.showWelcome && key.UnicodeChar > 0 {
+		ide.showWelcome = false
+	}
+	
 	// Check for Ctrl+C to quit
 	if key.UnicodeChar == 3 || (key.VirtualKeyCode == 'C' && (key.ControlKeyState&0x0008) != 0) { // Ctrl pressed
 		return false // Exit
@@ -142,13 +147,13 @@ func (ide *WindowsIDE) handleInput(key keyEventRecord) bool {
 				ide.submenuSelected = 0
 				ide.menuSelected--
 				if ide.menuSelected < 0 {
-					ide.menuSelected = 5
+					ide.menuSelected = 4
 				}
 				needsRedraw = true
 			case VK_RIGHT:
 				ide.submenuSelected = 0
 				ide.menuSelected++
-				if ide.menuSelected > 5 {
+				if ide.menuSelected > 4 {
 					ide.menuSelected = 0
 				}
 				needsRedraw = true
@@ -166,12 +171,12 @@ func (ide *WindowsIDE) handleInput(key keyEventRecord) bool {
 			case VK_LEFT:
 				ide.menuSelected--
 				if ide.menuSelected < 0 {
-					ide.menuSelected = 5
+					ide.menuSelected = 4
 				}
 				needsRedraw = true
 			case VK_RIGHT:
 				ide.menuSelected++
-				if ide.menuSelected > 5 {
+				if ide.menuSelected > 4 {
 					ide.menuSelected = 0
 				}
 				needsRedraw = true
@@ -209,7 +214,7 @@ func (ide *WindowsIDE) handleInput(key keyEventRecord) bool {
 
 	case VK_F1:
 		ide.menuActive = true
-		ide.menuSelected = 4 // Help
+		ide.menuSelected = 3 // Help
 		ide.submenuActive = true
 		ide.submenuSelected = 0
 		ide.draw()
@@ -361,20 +366,7 @@ func (ide *WindowsIDE) executeSubmenuAction() {
 		case 5: // Exit
 			os.Exit(0)
 		}
-	case 1: // Edit menu
-		switch ide.submenuSelected {
-		case 0: // Cut
-			ide.cutLine()
-		case 1: // Copy
-			ide.copyLine()
-		case 2: // Paste
-			ide.pasteLine()
-		case 3: // Delete Line
-			ide.deleteLine()
-		case 4: // Clear All
-			ide.clearAll()
-		}
-	case 2: // Run menu
+	case 1: // Run menu
 		switch ide.submenuSelected {
 		case 0: // Run (F5)
 			ide.Execute()
@@ -383,12 +375,12 @@ func (ide *WindowsIDE) executeSubmenuAction() {
 		case 2: // Debug
 			// TODO: implement debug
 		}
-	case 3: // Examples menu
+	case 2: // Examples menu
 		switch ide.submenuSelected {
 		case 0: // Browse Examples
 			ide.showExamplesBrowser()
 		}
-	case 4: // Help menu
+	case 3: // Help menu
 		switch ide.submenuSelected {
 		case 0: // Keyboard Shortcuts
 			ide.showKeyboardShortcuts()
@@ -397,7 +389,7 @@ func (ide *WindowsIDE) executeSubmenuAction() {
 		case 2: // About
 			ide.showAbout()
 		}
-	case 5: // Language menu
+	case 4: // Language menu
 		switch ide.submenuSelected {
 		case 0: // English
 			setIDELanguage(IDE_LANG_EN)
@@ -490,7 +482,7 @@ func (ide *WindowsIDE) handleSubmenuClick(x, y int) {
 	t := getIDETranslation()
 
 	// Calculate menu position dynamically
-	menuItems := []string{t.MenuFile, t.MenuEdit, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
+	menuItems := []string{t.MenuFile, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
 	menuX := 0
 	for i := 0; i < ide.menuSelected && i < len(menuItems); i++ {
 		menuX += len([]rune(menuItems[i])) + 2 // " Item "
@@ -503,15 +495,13 @@ func (ide *WindowsIDE) handleSubmenuClick(x, y int) {
 	switch ide.menuSelected {
 	case 0: // File
 		items = []string{t.FileNew, t.FileOpen + "...", t.FileSave, t.FileSaveAs + "...", "Close", t.FileExit}
-	case 1: // Edit
-		items = []string{t.EditCut + " Line", t.EditCopy + " Line", t.EditPaste + " Line", "Delete Line", t.EditClear + " All"}
-	case 2: // Run
+	case 1: // Run
 		items = []string{t.RunRun, t.RunStop, "Debug"}
-	case 3: // Examples
+	case 2: // Examples
 		items = []string{t.ExamplesBrowse}
-	case 4: // Help
+	case 3: // Help
 		items = []string{t.HelpShortcuts, "Language Reference", t.HelpAbout}
-	case 5: // Language
+	case 4: // Language
 		items = []string{t.LangEnglish, t.LangTurkish, t.LangFinnish, t.LangGerman}
 	}
 

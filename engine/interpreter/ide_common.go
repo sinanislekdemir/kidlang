@@ -97,15 +97,13 @@ func getSubmenuItemCount(menuSelected int) int {
 	switch menuSelected {
 	case 0: // File
 		return 6
-	case 1: // Edit
-		return 5
-	case 2: // Run
+	case 1: // Run
 		return 3
-	case 3: // Examples
+	case 2: // Examples
 		return 1
-	case 4: // Help
+	case 3: // Help
 		return 3
-	case 5: // Language
+	case 4: // Language
 		return 4
 	}
 	return 0

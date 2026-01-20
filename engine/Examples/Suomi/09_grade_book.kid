@@ -30,7 +30,9 @@ tulosta === Kaikki opiskelijat ===
 laatikko i = 1
 nayta:
 jos laatikko i <= laatikko maara niin
-tulosta lista nimet[laatikko i]: lista pisteet[laatikko i]
+laatikko nimi = lista nimet[laatikko i]
+laatikko pisteet_arvo = lista pisteet[laatikko i]
+tulosta laatikko nimi : laatikko pisteet_arvo
 laatikko i = laatikko i + 1
 mene nayta
 loppu

@@ -32,12 +32,14 @@ type UnixIDE struct {
 	menuSelected    int // Which menu item is selected (0=File, 1=Edit, 2=Run, 3=Help)
 	submenuActive   bool
 	submenuSelected int
+	showWelcome     bool
 }
 
 // NewIDE creates a new platform-specific IDE instance
 func NewIDE() IDE {
 	return &UnixIDE{
-		lines: []string{""},
+		lines:       []string{""},
+		showWelcome: true,
 	}
 }
 

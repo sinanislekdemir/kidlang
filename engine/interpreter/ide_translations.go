@@ -78,9 +78,15 @@ type IDEStrings struct {
 	// Help text
 	HelpRunning     string
 	HelpMenuOpen    string
+	
+	// Syntax highlighting keywords
+	SyntaxKeywords map[string]bool
 	HelpMenuNav     string
 	HelpFileSelect  string
 	HelpStopProgram string
+	
+	// Welcome message
+	WelcomeText []string
 
 	// Messages
 	MsgRunning       string
@@ -173,6 +179,28 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 		HelpMenuNav:     "Left/Right=Menu  Up/Down=Select  Enter=OK  ESC=Cancel",
 		HelpFileSelect:  "Up/Down=Select  Enter=Load  ESC=Back",
 		HelpStopProgram: "Press Ctrl+C to stop the program",
+		
+		SyntaxKeywords: map[string]bool{
+			"BOX": true, "STACK": true, "FILE": true, "PRINT": true, "ASK": true,
+			"IF": true, "THEN": true, "END": true, "FOR": true, "TO": true, "NEXT": true,
+			"WHILE": true, "GOTO": true, "OPEN": true, "CLOSE": true, "READ": true,
+			"WRITE": true, "READLINE": true, "AND": true, "OR": true, "NOT": true,
+			"SQRT": true, "ABS": true, "SQR": true, "SIN": true, "COS": true, "TAN": true,
+			"LOG": true, "ASIN": true, "ACOS": true, "ANSWER": true, "RANDOM": true, "NOW": true,
+			"SEEK": true, "SLEEP": true, "EXEC": true, "ASSIGN": true, "PUT": true, "PORT": true,
+			"EN": true, "TR": true, "FI": true, "DE": true,
+		},
+		
+		WelcomeText: []string{
+			"// Welcome to KidLang IDE!",
+			"//",
+			"// Try your first program:",
+			"",
+			"PRINT \"Hello, World!\"",
+			"",
+			"// Press F5 to run, F10 for menu",
+			"// Press any key to start coding...",
+		},
 
 		MsgRunning:       "=== Running Program ===",
 		MsgFinished:      "=== Program Finished ===",
@@ -259,6 +287,27 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 		HelpMenuNav:     "Sol/Sağ=Menü  Yukarı/Aşağı=Seç  Enter=Tamam  ESC=İptal",
 		HelpFileSelect:  "Yukarı/Aşağı=Seç  Enter=Yükle  ESC=Geri",
 		HelpStopProgram: "Programı durdurmak için Ctrl+C'ye basın",
+		
+		SyntaxKeywords: map[string]bool{
+			"KUTU": true, "LISTE": true, "DOSYA": true, "YAZ": true, "SOR": true,
+			"EGER": true, "ISE": true, "SON": true, "GIT": true, "AC": true, "KAPAT": true,
+			"OKU": true, "SATIROKU": true, "VE": true, "VEYA": true, "KAREKOK": true,
+			"MOD": true, "KARE": true, "CEVAP": true, "RASTGELE": true, "TARIH": true,
+			"SIRA": true, "BEKLE": true, "CALISTIR": true, "ATAMA": true, "KOY": true,
+			"ICIN": true, "SONRAKI": true, "DEGIL": true,
+			"EN": true, "TR": true, "FI": true, "DE": true,
+		},
+		
+		WelcomeText: []string{
+			"// KidLang IDE'ye Hoş Geldiniz!",
+			"//",
+			"// İlk programınızı deneyin:",
+			"",
+			"YAZ \"Merhaba, Dünya!\"",
+			"",
+			"// Çalıştırmak için F5, menü için F10",
+			"// Kodlamaya başlamak için bir tuşa basın...",
+		},
 
 		MsgRunning:       "=== Program Çalışıyor ===",
 		MsgFinished:      "=== Program Tamamlandı ===",
@@ -345,6 +394,27 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 		HelpMenuNav:     "Vasen/Oikea=Valikko  Ylös/Alas=Valitse  Enter=OK  ESC=Peruuta",
 		HelpFileSelect:  "Ylös/Alas=Valitse  Enter=Lataa  ESC=Takaisin",
 		HelpStopProgram: "Pysäytä ohjelma painamalla Ctrl+C",
+		
+		SyntaxKeywords: map[string]bool{
+			"LAATIKKO": true, "LISTA": true, "TIEDOSTO": true, "TULOSTA": true, "KYSY": true,
+			"JOS": true, "NIIN": true, "LOPPU": true, "MENE": true, "AVAA": true, "SULJE": true,
+			"LUE": true, "LUERIVI": true, "JA": true, "TAI": true, "NELIOJUURI": true,
+			"ITSEISARVO": true, "NELIO": true, "VASTAUS": true, "SATUNNAINEN": true, "AIKA": true,
+			"HAE": true, "ODOTA": true, "SUORITA": true, "ASETA": true, "LAITA": true, "PORTTI": true,
+			"VARTEN": true, "SEURAAVA": true, "EI": true,
+			"EN": true, "TR": true, "FI": true, "DE": true,
+		},
+		
+		WelcomeText: []string{
+			"// Tervetuloa KidLang IDE:hen!",
+			"//",
+			"// Kokeile ensimmäistä ohjelmaasi:",
+			"",
+			"TULOSTA \"Hei, maailma!\"",
+			"",
+			"// Paina F5 suorittaaksesi, F10 valikko",
+			"// Paina mitä tahansa näppäintä aloittaaksesi koodauksen...",
+		},
 
 		MsgRunning:       "=== Ohjelma suoritetaan ===",
 		MsgFinished:      "=== Ohjelma valmis ===",
@@ -431,6 +501,27 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 		HelpMenuNav:     "Links/Rechts=Menü  Auf/Ab=Wählen  Enter=OK  ESC=Abbrechen",
 		HelpFileSelect:  "Auf/Ab=Wählen  Enter=Laden  ESC=Zurück",
 		HelpStopProgram: "Drücken Sie Ctrl+C um das Programm zu stoppen",
+		
+		SyntaxKeywords: map[string]bool{
+			"KISTE": true, "DATEI": true, "SCHREIB": true, "FRAG": true,
+			"WENN": true, "DANN": true, "ENDE": true, "GEH": true, "OEFFNE": true, "SCHLIESSE": true,
+			"LIES": true, "LIESZEILE": true, "UND": true, "ODER": true, "WURZEL": true,
+			"BETRAG": true, "QUADRAT": true, "ANTWORT": true, "ZUFALL": true, "ZEIT": true,
+			"SUCHE": true, "WARTE": true, "FUEHREAUS": true, "SETZE": true, "TU": true,
+			"FUER": true, "NAECHSTER": true, "NICHT": true,
+			"EN": true, "TR": true, "FI": true, "DE": true,
+		},
+		
+		WelcomeText: []string{
+			"// Willkommen bei KidLang IDE!",
+			"//",
+			"// Versuche dein erstes Programm:",
+			"",
+			"SCHREIB \"Hallo, Welt!\"",
+			"",
+			"// Drücke F5 zum Ausführen, F10 für Menü",
+			"// Drücke eine beliebige Taste um mit dem Programmieren zu beginnen...",
+		},
 
 		MsgRunning:       "=== Programm läuft ===",
 		MsgFinished:      "=== Programm beendet ===",

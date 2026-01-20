@@ -105,12 +105,14 @@ type WindowsIDE struct {
 	menuSelected    int
 	submenuActive   bool
 	submenuSelected int
+	showWelcome     bool
 }
 
 // NewIDE creates a new platform-specific IDE instance
 func NewIDE() IDE {
 	return &WindowsIDE{
-		lines: []string{""},
+		lines:       []string{""},
+		showWelcome: true,
 	}
 }
 

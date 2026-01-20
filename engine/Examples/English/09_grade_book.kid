@@ -30,7 +30,9 @@ print === All Students ===
 box i = 1
 show:
 if box i <= box count then
-print stack names[box i]: stack scores[box i]
+box name = stack names[box i]
+box score = stack scores[box i]
+print box name : box score
 box i = box i + 1
 goto show
 end

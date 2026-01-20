@@ -30,7 +30,9 @@ schreib === Alle Schüler ===
 kiste i = 1
 zeigen:
 wenn kiste i <= kiste anzahl dann
-schreib liste namen[kiste i]: liste noten[kiste i]
+kiste name = liste namen[kiste i]
+kiste note = liste noten[kiste i]
+schreib kiste name : kiste note
 kiste i = kiste i + 1
 geh zeigen
 ende

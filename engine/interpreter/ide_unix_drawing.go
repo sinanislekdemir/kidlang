@@ -19,7 +19,7 @@ func (ide *UnixIDE) draw() {
 	ide.screen.MovePrint(0, 0, strings.Repeat(" ", ide.maxX))
 
 	// Menu items with proper spacing
-	menuItems := []string{t.MenuFile, t.MenuEdit, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
+	menuItems := []string{t.MenuFile, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
 	menuX := 1
 	for i, item := range menuItems {
 		if ide.menuActive && i == ide.menuSelected {
@@ -39,28 +39,46 @@ func (ide *UnixIDE) draw() {
 	// Draw editor area with black background
 	ide.screen.ColorOn(1)
 	editorHeight := ide.maxY - 2 // Reserve space for menu and status bar
-
-	for row := 0; row < editorHeight; row++ {
-		lineNum := row + ide.scrollY
-		ide.screen.Move(row+1, 0)
-
-		// Clear line with black background
-		ide.screen.Print(strings.Repeat(" ", ide.maxX))
-
-		if lineNum < len(ide.lines) {
-			// Draw line number in yellow
-			ide.screen.ColorOff(1)
-			ide.screen.ColorOn(7)
-			ide.screen.MovePrint(row+1, 0, fmt.Sprintf("%4d ", lineNum+1))
-			ide.screen.ColorOff(7)
-			ide.screen.ColorOn(1)
-
-			// Draw line content with syntax highlighting
-			line := ide.lines[lineNum]
-			if len(line) > ide.maxX-6 {
-				line = line[:ide.maxX-6]
+	
+	// Show welcome text if enabled and no content
+	if ide.showWelcome && len(ide.lines) == 1 && ide.lines[0] == "" {
+		t := getIDETranslation()
+		for row := 0; row < editorHeight; row++ {
+			ide.screen.Move(row+1, 0)
+			ide.screen.Print(strings.Repeat(" ", ide.maxX))
+			
+			if row < len(t.WelcomeText) {
+				line := t.WelcomeText[row]
+				startX := (ide.maxX - len([]rune(line))) / 2
+				if startX < 0 {
+					startX = 0
+				}
+				ide.drawSyntaxHighlightedLine(row+1, startX, line)
 			}
-			ide.drawSyntaxHighlightedLine(row+1, 5, line)
+		}
+	} else {
+		for row := 0; row < editorHeight; row++ {
+			lineNum := row + ide.scrollY
+			ide.screen.Move(row+1, 0)
+
+			// Clear line with black background
+			ide.screen.Print(strings.Repeat(" ", ide.maxX))
+
+			if lineNum < len(ide.lines) {
+				// Draw line number in yellow
+				ide.screen.ColorOff(1)
+				ide.screen.ColorOn(7)
+				ide.screen.MovePrint(row+1, 0, fmt.Sprintf("%4d ", lineNum+1))
+				ide.screen.ColorOff(7)
+				ide.screen.ColorOn(1)
+
+				// Draw line content with syntax highlighting
+				line := ide.lines[lineNum]
+				if len(line) > ide.maxX-6 {
+					line = line[:ide.maxX-6]
+				}
+				ide.drawSyntaxHighlightedLine(row+1, 5, line)
+			}
 		}
 	}
 	ide.screen.ColorOff(1)
@@ -111,7 +129,7 @@ func (ide *UnixIDE) drawMenuDropdown() {
 	t := getIDETranslation()
 
 	// Calculate menu position dynamically based on menu items
-	menuItems := []string{t.MenuFile, t.MenuEdit, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
+	menuItems := []string{t.MenuFile, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
 	menuX := 1
 	for i := 0; i < ide.menuSelected && i < len(menuItems); i++ {
 		menuX += len([]rune(menuItems[i])) + 3
@@ -122,15 +140,13 @@ func (ide *UnixIDE) drawMenuDropdown() {
 	switch ide.menuSelected {
 	case 0: // File
 		items = []string{t.FileNew, t.FileOpen, t.FileSave, t.FileSaveAs, "---", t.FileExit}
-	case 1: // Edit
-		items = []string{t.EditCut, t.EditCopy, t.EditPaste, "---", t.EditClear}
-	case 2: // Run
+	case 1: // Run
 		items = []string{t.RunRun, "---", t.RunStop}
-	case 3: // Examples
+	case 2: // Examples
 		items = []string{t.ExamplesBrowse}
-	case 4: // Help
+	case 3: // Help
 		items = []string{t.HelpAbout, t.HelpDocs, t.HelpShortcuts}
-	case 5: // Language
+	case 4: // Language
 		items = []string{t.LangEnglish, t.LangTurkish, t.LangFinnish, t.LangGerman}
 	}
 
@@ -189,36 +205,9 @@ func isDigit(ch rune) bool {
 
 // drawSyntaxHighlightedLine draws a line with syntax highlighting
 func (ide *UnixIDE) drawSyntaxHighlightedLine(y, x int, line string) {
-	// Keywords in all supported languages
-	keywords := map[string]bool{
-		// English
-		"box": true, "stack": true, "file": true, "print": true, "ask": true,
-		"if": true, "then": true, "end": true, "for": true, "to": true, "next": true,
-		"while": true, "goto": true, "open": true, "close": true, "read": true,
-		"write": true, "readline": true, "and": true, "or": true, "not": true,
-		"sqrt": true, "abs": true, "sqr": true, "sin": true, "cos": true, "tan": true,
-		"log": true, "asin": true, "acos": true, "answer": true, "random": true, "now": true,
-		"seek": true, "sleep": true, "exec": true, "assign": true, "put": true, "port": true,
-		"EN": true, "TR": true, "FI": true, "DE": true,
-		// Turkish
-		"kutu": true, "liste": true, "dosya": true, "yaz": true, "sor": true,
-		"eger": true, "ise": true, "son": true, "git": true, "ac": true, "kapat": true,
-		"oku": true, "satiroku": true, "ve": true, "veya": true, "karekok": true,
-		"mod": true, "kare": true, "cevap": true, "rastgele": true, "tarih": true,
-		"sira": true, "bekle": true, "calistir": true, "atama": true, "koy": true,
-		// Finnish
-		"laatikko": true, "lista": true, "tiedosto": true, "tulosta": true, "kysy": true,
-		"jos": true, "niin": true, "loppu": true, "mene": true, "avaa": true, "sulje": true,
-		"lue": true, "luerivi": true, "ja": true, "tai": true, "neliojuuri": true,
-		"itseisarvo": true, "nelio": true, "vastaus": true, "satunnainen": true, "aika": true,
-		"hae": true, "odota": true, "suorita": true, "aseta": true, "laita": true, "portti": true,
-		// German
-		"kiste": true, "datei": true, "schreib": true, "frag": true,
-		"wenn": true, "dann": true, "ende": true, "geh": true, "oeffne": true, "schliesse": true,
-		"lies": true, "lieszeile": true, "und": true, "oder": true, "wurzel": true,
-		"betrag": true, "quadrat": true, "antwort": true, "zufall": true, "zeit": true,
-		"suche": true, "warte": true, "fuehreaus": true, "setze": true, "tu": true,
-	}
+	// Get keywords from translation
+	t := getIDETranslation()
+	keywords := t.SyntaxKeywords
 
 	col := x
 	i := 0

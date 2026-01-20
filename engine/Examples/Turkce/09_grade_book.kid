@@ -30,7 +30,9 @@ yaz === Tüm Öğrenciler ===
 kutu i = 1
 goster:
 eger kutu i <= kutu adet ise
-yaz liste isimler[kutu i]: liste notlar[kutu i]
+kutu isim = liste isimler[kutu i]
+kutu not = liste notlar[kutu i]
+yaz kutu isim : kutu not
 kutu i = kutu i + 1
 git goster
 son

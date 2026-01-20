@@ -173,7 +173,7 @@ func (ide *WindowsIDE) draw() {
 // drawMenuBar draws the top menu bar
 func (ide *WindowsIDE) drawMenuBar() {
 	t := getIDETranslation()
-	menus := []string{t.MenuFile, t.MenuEdit, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
+	menus := []string{t.MenuFile, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
 	x := 0
 
 	for i, menu := range menus {
@@ -203,6 +203,29 @@ func (ide *WindowsIDE) drawMenuBar() {
 // drawEditor draws the main editor area with line numbers
 func (ide *WindowsIDE) drawEditor() {
 	editorHeight := ide.maxY - 4
+	
+	// Show welcome text if enabled and no content
+	if ide.showWelcome && len(ide.lines) == 1 && ide.lines[0] == "" {
+		t := getIDETranslation()
+		for i := 0; i < editorHeight; i++ {
+			y := i + 1
+			if i < len(t.WelcomeText) {
+				// Center the welcome text
+				line := t.WelcomeText[i]
+				startX := (ide.maxX - len([]rune(line))) / 2
+				if startX < 0 {
+					startX = 0
+				}
+				ide.drawHighlightedLineAt(startX, y, line)
+			} else {
+				// Clear rest of screen
+				for x := 0; x < ide.maxX; x++ {
+					screenBuf.set(x, y, ' ', colorWhite)
+				}
+			}
+		}
+		return
+	}
 
 	for i := 0; i < editorHeight; i++ {
 		lineNum := ide.scrollY + i
@@ -228,66 +251,55 @@ func (ide *WindowsIDE) drawEditor() {
 
 // drawHighlightedLineAt draws a line with syntax highlighting at a specific position
 func (ide *WindowsIDE) drawHighlightedLineAt(startX, y int, line string) {
-	keywords := []string{
-		"PRINT", "INPUT", "LET", "IF", "THEN", "ELSE", "ENDIF",
-		"FOR", "TO", "STEP", "NEXT", "WHILE", "WEND", "GOTO",
-		"GOSUB", "RETURN", "END", "DIM", "DATA", "READ",
-		"RESTORE", "STOP", "CLS", "AND", "OR", "NOT",
-	}
+t := getIDETranslation()
+keywords := t.SyntaxKeywords
 
-	x := startX
+x := startX
 
-	// Check if line starts with REM (comment)
-	if len(line) >= 3 && strings.ToUpper(line[:3]) == "REM" {
-		screenBuf.writeString(x, y, line, colorGreen)
-		x += len([]rune(line)) // Count runes, not bytes
-		// Clear rest of line
-		for ; x < ide.maxX; x++ {
-			screenBuf.set(x, y, ' ', colorWhite)
-		}
-		return
-	}
+// Check if line starts with REM (comment)
+if len(line) >= 3 && strings.ToUpper(line[:3]) == "REM" {
+screenBuf.writeString(x, y, line, colorGreen)
+x += len([]rune(line))
+// Clear rest of line
+for ; x < ide.maxX; x++ {
+screenBuf.set(x, y, ' ', colorWhite)
+}
+return
+}
 
-	words := splitPreservingSpaces(line)
+words := splitPreservingSpaces(line)
 
-	for _, word := range words {
-		if x >= ide.maxX {
-			break
-		}
+for _, word := range words {
+if x >= ide.maxX {
+break
+}
 
-		// Check if it's a keyword
-		isKeyword := false
-		wordUpper := strings.ToUpper(word)
-		for _, kw := range keywords {
-			if wordUpper == kw {
-				screenBuf.writeString(x, y, word, colorYellow)
-				isKeyword = true
-				break
-			}
-		}
+// Check if it's a keyword
+wordUpper := strings.ToUpper(word)
+if keywords[wordUpper] {
+screenBuf.writeString(x, y, word, colorYellow)
+} else {
+var color uint16
+// Check if it's a string (starts with quote)
+if len(word) > 0 && word[0] == '"' {
+color = colorCyan
+} else if len(word) > 0 && word[0] >= '0' && word[0] <= '9' {
+// Number
+color = colorMagenta
+} else {
+// Default
+color = colorWhite
+}
+screenBuf.writeString(x, y, word, color)
+}
 
-		if !isKeyword {
-			var color uint16
-			// Check if it's a string (starts with quote)
-			if len(word) > 0 && word[0] == '"' {
-				color = colorCyan
-			} else if len(word) > 0 && word[0] >= '0' && word[0] <= '9' {
-				// Number
-				color = colorMagenta
-			} else {
-				// Default
-				color = colorWhite
-			}
-			screenBuf.writeString(x, y, word, color)
-		}
+x += len([]rune(word))
+}
 
-		x += len([]rune(word)) // Count runes, not bytes
-	}
-
-	// Clear rest of line
-	for ; x < ide.maxX; x++ {
-		screenBuf.set(x, y, ' ', colorWhite)
-	}
+// Clear rest of line
+for ; x < ide.maxX; x++ {
+screenBuf.set(x, y, ' ', colorWhite)
+}
 }
 
 // drawStatusBar draws the status bar
@@ -337,20 +349,18 @@ func (ide *WindowsIDE) drawSubmenu() {
 	switch ide.menuSelected {
 	case 0: // File
 		items = []string{t.FileNew, t.FileOpen + "...", t.FileSave, t.FileSaveAs + "...", t.FileClose, t.FileExit}
-	case 1: // Edit
-		items = []string{t.EditCut + " Line", t.EditCopy + " Line", t.EditPaste + " Line", t.EditDelete + " Line", t.EditClear + " All"}
-	case 2: // Run
+	case 1: // Run
 		items = []string{t.RunRun, t.RunStop, t.RunDebug}
-	case 3: // Examples
+	case 2: // Examples
 		items = []string{t.ExamplesBrowse}
-	case 4: // Help
+	case 3: // Help
 		items = []string{t.HelpShortcuts, t.HelpLangRef, t.HelpAbout}
-	case 5: // Language
+	case 4: // Language
 		items = []string{t.LangEnglish, t.LangTurkish, t.LangFinnish, t.LangGerman}
 	}
 
 	// Calculate position under menu item dynamically
-	menuItems := []string{t.MenuFile, t.MenuEdit, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
+	menuItems := []string{t.MenuFile, t.MenuRun, t.MenuExamples, t.MenuHelp, t.MenuLanguage}
 	x := 0
 	for i := 0; i < ide.menuSelected && i < len(menuItems); i++ {
 		x += len([]rune(menuItems[i])) + 2 // " Item "
