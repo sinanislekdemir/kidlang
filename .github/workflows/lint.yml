@@ -22,3 +22,7 @@ jobs:
       - name: Run lint
         working-directory: ./engine
         run: make lint
+
+      - name: Run engine tests
+        working-directory: ./tests
+        run: ./test.sh
