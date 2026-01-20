@@ -127,3 +127,12 @@ test:
 
 fmt:
 	@go fmt ./...
+
+lint:
+	@echo "Running go vet..."
+	@go vet ./...
+	@echo "Running staticcheck (if installed)..."
+	@command -v staticcheck >/dev/null 2>&1 && staticcheck ./... || echo "  Note: staticcheck not installed. Run: go install honnef.co/go/tools/cmd/staticcheck@latest"
+	@echo "Running golint (if installed)..."
+	@command -v golint >/dev/null 2>&1 && golint ./... || echo "  Note: golint not installed. Run: go install golang.org/x/lint/golint@latest"
+	@echo "Lint checks complete!"

@@ -95,7 +95,6 @@ func (ide *UnixIDE) Run() error {
 
 		ide.handleInput(key)
 	}
-	return nil
 }
 
 // Close cleans up ncurses
