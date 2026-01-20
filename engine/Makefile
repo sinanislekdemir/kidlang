@@ -55,16 +55,26 @@ release:
 	@echo "Building Windows ARM64..."
 	@GOOS=windows GOARCH=arm64 go build -ldflags="-s -w" -trimpath -o $(DIST_DIR)/kidlang-windows-arm64.exe
 	@echo ""
-	@echo "Creating compressed archives..."
-	@cd $(DIST_DIR) && tar -czf kidlang-linux-amd64.tar.gz kidlang-linux-amd64 && echo "  ✓ kidlang-linux-amd64.tar.gz"
-	@cd $(DIST_DIR) && zip -q kidlang-windows-amd64.zip kidlang-windows-amd64.exe && echo "  ✓ kidlang-windows-amd64.zip"
-	@cd $(DIST_DIR) && zip -q kidlang-windows-arm64.zip kidlang-windows-arm64.exe && echo "  ✓ kidlang-windows-arm64.zip"
+	@echo "Creating release packages with Examples..."
+	@mkdir -p $(DIST_DIR)/kidlang-linux-amd64-pkg
+	@cp $(DIST_DIR)/kidlang-linux-amd64 $(DIST_DIR)/kidlang-linux-amd64-pkg/
+	@cp -r Examples $(DIST_DIR)/kidlang-linux-amd64-pkg/
+	@cd $(DIST_DIR) && tar -czf kidlang-linux-amd64.tar.gz kidlang-linux-amd64-pkg && echo "  ✓ kidlang-linux-amd64.tar.gz"
+	@mkdir -p $(DIST_DIR)/kidlang-windows-amd64-pkg
+	@cp $(DIST_DIR)/kidlang-windows-amd64.exe $(DIST_DIR)/kidlang-windows-amd64-pkg/
+	@cp -r Examples $(DIST_DIR)/kidlang-windows-amd64-pkg/
+	@cd $(DIST_DIR) && zip -q -r kidlang-windows-amd64.zip kidlang-windows-amd64-pkg && echo "  ✓ kidlang-windows-amd64.zip"
+	@mkdir -p $(DIST_DIR)/kidlang-windows-arm64-pkg
+	@cp $(DIST_DIR)/kidlang-windows-arm64.exe $(DIST_DIR)/kidlang-windows-arm64-pkg/
+	@cp -r Examples $(DIST_DIR)/kidlang-windows-arm64-pkg/
+	@cd $(DIST_DIR) && zip -q -r kidlang-windows-arm64.zip kidlang-windows-arm64-pkg && echo "  ✓ kidlang-windows-arm64.zip"
 	@echo ""
 	@echo "Release packages created in $(DIST_DIR)/:"
 	@ls -lh $(DIST_DIR)/*.tar.gz $(DIST_DIR)/*.zip 2>/dev/null
 	@echo ""
-	@echo "Cleaning up uncompressed binaries..."
+	@echo "Cleaning up temporary files..."
 	@rm -f $(DIST_DIR)/kidlang-linux-amd64 $(DIST_DIR)/kidlang-windows-*.exe
+	@rm -rf $(DIST_DIR)/kidlang-*-pkg
 	@echo "Done! Release files are in $(DIST_DIR)/"
 
 release-darwin:
@@ -74,26 +84,37 @@ release-darwin:
 	@GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o $(DIST_DIR)/kidlang-darwin-amd64
 	@echo "Building Darwin ARM64..."
 	@GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -trimpath -o $(DIST_DIR)/kidlang-darwin-arm64
-	@echo "Creating compressed archives..."
-	@cd $(DIST_DIR) && tar -czf kidlang-darwin-amd64.tar.gz kidlang-darwin-amd64 && echo "  ✓ kidlang-darwin-amd64.tar.gz"
-	@cd $(DIST_DIR) && tar -czf kidlang-darwin-arm64.tar.gz kidlang-darwin-arm64 && echo "  ✓ kidlang-darwin-arm64.tar.gz"
-	@echo "Cleaning up uncompressed binaries..."
+	@echo "Creating release packages with Examples..."
+	@mkdir -p $(DIST_DIR)/kidlang-darwin-amd64-pkg
+	@cp $(DIST_DIR)/kidlang-darwin-amd64 $(DIST_DIR)/kidlang-darwin-amd64-pkg/
+	@cp -r Examples $(DIST_DIR)/kidlang-darwin-amd64-pkg/
+	@cd $(DIST_DIR) && tar -czf kidlang-darwin-amd64.tar.gz kidlang-darwin-amd64-pkg && echo "  ✓ kidlang-darwin-amd64.tar.gz"
+	@mkdir -p $(DIST_DIR)/kidlang-darwin-arm64-pkg
+	@cp $(DIST_DIR)/kidlang-darwin-arm64 $(DIST_DIR)/kidlang-darwin-arm64-pkg/
+	@cp -r Examples $(DIST_DIR)/kidlang-darwin-arm64-pkg/
+	@cd $(DIST_DIR) && tar -czf kidlang-darwin-arm64.tar.gz kidlang-darwin-arm64-pkg && echo "  ✓ kidlang-darwin-arm64.tar.gz"
+	@echo "Cleaning up temporary files..."
 	@rm -f $(DIST_DIR)/kidlang-darwin-amd64 $(DIST_DIR)/kidlang-darwin-arm64
+	@rm -rf $(DIST_DIR)/kidlang-*-pkg
 	@echo "Done! Darwin releases are in $(DIST_DIR)/"
 
 release-current:
 	@mkdir -p $(DIST_DIR)
 	@echo "Building optimized release for current platform..."
 	@go build -ldflags="-s -w" -trimpath -o $(DIST_DIR)/kidlang-$(shell go env GOOS)-$(shell go env GOARCH)$(shell test "$(shell go env GOOS)" = "windows" && echo ".exe" || echo "")
-	@echo "Creating archive..."
+	@echo "Creating release package with Examples..."
+	@mkdir -p $(DIST_DIR)/kidlang-$(shell go env GOOS)-$(shell go env GOARCH)-pkg
+	@cp $(DIST_DIR)/kidlang-$(shell go env GOOS)-$(shell go env GOARCH)$(shell test "$(shell go env GOOS)" = "windows" && echo ".exe" || echo "") $(DIST_DIR)/kidlang-$(shell go env GOOS)-$(shell go env GOARCH)-pkg/
+	@cp -r Examples $(DIST_DIR)/kidlang-$(shell go env GOOS)-$(shell go env GOARCH)-pkg/
 	@if [ "$(shell go env GOOS)" = "windows" ]; then \
-		cd $(DIST_DIR) && zip -q kidlang-$(shell go env GOOS)-$(shell go env GOARCH).zip kidlang-$(shell go env GOOS)-$(shell go env GOARCH).exe; \
+		cd $(DIST_DIR) && zip -q -r kidlang-$(shell go env GOOS)-$(shell go env GOARCH).zip kidlang-$(shell go env GOOS)-$(shell go env GOARCH)-pkg; \
 		echo "Created: $(DIST_DIR)/kidlang-$(shell go env GOOS)-$(shell go env GOARCH).zip"; \
 	else \
-		cd $(DIST_DIR) && tar -czf kidlang-$(shell go env GOOS)-$(shell go env GOARCH).tar.gz kidlang-$(shell go env GOOS)-$(shell go env GOARCH); \
+		cd $(DIST_DIR) && tar -czf kidlang-$(shell go env GOOS)-$(shell go env GOARCH).tar.gz kidlang-$(shell go env GOOS)-$(shell go env GOARCH)-pkg; \
 		echo "Created: $(DIST_DIR)/kidlang-$(shell go env GOOS)-$(shell go env GOARCH).tar.gz"; \
 	fi
 	@rm -f $(DIST_DIR)/kidlang-$(shell go env GOOS)-$(shell go env GOARCH) $(DIST_DIR)/kidlang-$(shell go env GOOS)-$(shell go env GOARCH).exe
+	@rm -rf $(DIST_DIR)/kidlang-*-pkg
 
 clean:
 	@rm -rf $(DIST_DIR)

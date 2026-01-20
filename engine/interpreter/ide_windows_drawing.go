@@ -185,7 +185,13 @@ func (ide *WindowsIDE) drawMenuBar() {
 		}
 		menuText := " " + menu + " "
 		screenBuf.writeString(x, 0, menuText, color)
-		x += len([]rune(menuText)) // Count runes, not bytes
+		x += len([]rune(menuText))
+		
+		// Add space between menus
+		if i < len(menus)-1 {
+			screenBuf.set(x, 0, ' ', colorBlackOnWhite)
+			x++
+		}
 	}
 
 	// Fill rest of line with menu bar color
@@ -348,7 +354,7 @@ func (ide *WindowsIDE) drawSubmenu() {
 	x := 0
 	for i := 0; i < ide.menuSelected && i < len(menuItems); i++ {
 		x += len([]rune(menuItems[i])) + 2 // " Item "
-		x += 1                             // Space between menus
+		x += 1                              // Space after each menu (matching menu bar drawing)
 	}
 	y := 1
 

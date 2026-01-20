@@ -28,7 +28,7 @@ func Ask(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 			}
 			stack.Reader = bufio.NewReader(inIo)
 		}
-		buffer, _, err := stack.Reader.ReadLine()
+		bufferStr, err := readLineWindows(stack.Reader)
 		if err != nil {
 			memory[answerKey] = VariableBox{
 				VariableType: TYPE_STRING,
@@ -36,7 +36,6 @@ func Ask(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 			}
 			return nil
 		}
-		bufferStr := string(buffer)
 
 		// Split the input into arguments
 		tokens := strings.Split(bufferStr, " ")
