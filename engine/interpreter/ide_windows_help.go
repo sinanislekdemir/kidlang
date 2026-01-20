@@ -87,3 +87,47 @@ func (ide *WindowsIDE) showLanguageReference() {
 	ide.readKey()
 	ide.draw()
 }
+
+// promptSaveChanges shows a dialog asking if user wants to save changes
+// Returns: true if should continue with action, false if cancelled
+func (ide *WindowsIDE) promptSaveChanges() bool {
+t := getIDETranslation()
+
+screenBuf.clear()
+
+centerY := ide.maxY / 2
+centerX := (ide.maxX - len([]rune(t.MsgSaveChanges))) / 2
+
+screenBuf.writeString(centerX, centerY, t.MsgSaveChanges, colorYellow)
+
+// Show options: Yes (Y) / No (N) / Cancel (ESC)
+options := "Y = Yes, N = No, ESC = Cancel"
+optX := (ide.maxX - len([]rune(options))) / 2
+screenBuf.writeString(optX, centerY+2, options, colorWhite)
+
+ide.flushScreen()
+
+for {
+event := ide.readKey()
+if event.eventType == KEY_EVENT && event.keyDown {
+switch event.unicodeChar {
+case 'y', 'Y':
+// Save
+if ide.filename == "" {
+ide.showFileBrowser(false) // Show save dialog
+} else {
+ide.SaveFile(ide.filename)
+}
+return true
+case 'n', 'N':
+// Don't save, continue
+return true
+}
+// Check for ESC
+if event.virtualKeyCode == VK_ESCAPE {
+// Cancel action
+return false
+}
+}
+}
+}

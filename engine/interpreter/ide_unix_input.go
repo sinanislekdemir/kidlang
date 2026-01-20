@@ -180,7 +180,16 @@ func (ide *UnixIDE) handleMenuSelection() {
 	case 0: // File menu
 		switch ide.submenuSelected {
 		case 0: // New
+			// Check if modified
+			if ide.modified {
+				if !ide.promptSaveChanges() {
+					ide.menuActive = false
+					ide.submenuActive = false
+					return
+				}
+			}
 			ide.lines = []string{""}
+			ide.showWelcome = true
 			ide.cursorX = 0
 			ide.cursorY = 0
 			ide.scrollY = 0
@@ -189,6 +198,14 @@ func (ide *UnixIDE) handleMenuSelection() {
 			ide.menuActive = false
 			ide.submenuActive = false
 		case 1: // Open
+			// Check if modified
+			if ide.modified {
+				if !ide.promptSaveChanges() {
+					ide.menuActive = false
+					ide.submenuActive = false
+					return
+				}
+			}
 			ide.menuActive = false
 			ide.submenuActive = false
 			ide.showFileBrowser(true) // true = open mode
@@ -205,6 +222,14 @@ func (ide *UnixIDE) handleMenuSelection() {
 			ide.submenuActive = false
 			ide.showFileBrowser(false) // false = save mode
 		case 5: // Exit (skip separator at index 4)
+			// Check if modified
+			if ide.modified {
+				if !ide.promptSaveChanges() {
+					ide.menuActive = false
+					ide.submenuActive = false
+					return
+				}
+			}
 			goncurses.End()
 			os.Exit(0)
 		}

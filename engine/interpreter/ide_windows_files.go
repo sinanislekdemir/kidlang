@@ -119,10 +119,13 @@ func (ide *WindowsIDE) Execute() error {
 // newFile creates a new file
 func (ide *WindowsIDE) newFile() {
 	if ide.modified {
-		// TODO: Ask to save
+		if !ide.promptSaveChanges() {
+			return
+		}
 	}
 
 	ide.lines = []string{""}
+	ide.showWelcome = true
 	ide.filename = ""
 	ide.modified = false
 	ide.cursorX = 0
@@ -132,6 +135,11 @@ func (ide *WindowsIDE) newFile() {
 
 // promptOpenFile prompts for a filename and opens it
 func (ide *WindowsIDE) promptOpenFile() {
+	if ide.modified {
+		if !ide.promptSaveChanges() {
+			return
+		}
+	}
 	ide.showFileBrowser(true)
 }
 
@@ -156,7 +164,9 @@ func (ide *WindowsIDE) promptSaveAs() {
 // closeCurrentFile closes the current file
 func (ide *WindowsIDE) closeCurrentFile() {
 	if ide.modified {
-		// TODO: Ask to save
+		if !ide.promptSaveChanges() {
+			return
+		}
 	}
 	ide.newFile()
 }

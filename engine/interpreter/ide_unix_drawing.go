@@ -258,7 +258,7 @@ func (ide *UnixIDE) drawSyntaxHighlightedLine(y, x int, line string) {
 			}
 			word := string(runes[start:i])
 
-			if keywords[word] || keywords[strings.ToLower(word)] {
+			if keywords[strings.ToUpper(word)] {
 				ide.screen.ColorOn(2) // Yellow for keywords
 				ide.screen.MovePrint(y, col, word)
 				ide.screen.ColorOff(2)

@@ -397,3 +397,50 @@ func (ide *UnixIDE) showExampleFiles(dir string) bool {
 		}
 	}
 }
+
+// promptSaveChanges shows a dialog asking if user wants to save changes
+// Returns: true if should continue with action, false if cancelled
+func (ide *UnixIDE) promptSaveChanges() bool {
+	t := getIDETranslation()
+	
+	ide.screen.Clear()
+	ide.screen.ColorOn(1)
+	for row := 0; row < ide.maxY; row++ {
+		ide.screen.MovePrint(row, 0, strings.Repeat(" ", ide.maxX))
+	}
+	
+	centerY := ide.maxY / 2
+	centerX := (ide.maxX - len([]rune(t.MsgSaveChanges))) / 2
+	
+	ide.screen.ColorOn(2)
+	ide.screen.MovePrint(centerY, centerX, t.MsgSaveChanges)
+	ide.screen.ColorOff(2)
+	
+	// Show options: Yes (Y) / No (N) / Cancel (ESC)
+	options := "Y = Yes, N = No, ESC = Cancel"
+	optX := (ide.maxX - len([]rune(options))) / 2
+	ide.screen.MovePrint(centerY+2, optX, options)
+	
+	ide.screen.ColorOff(1)
+	ide.screen.Refresh()
+	
+	for {
+		ch := ide.screen.GetChar()
+		switch ch {
+		case 'y', 'Y':
+			// Save
+			if ide.filename == "" {
+				ide.showFileBrowser(false) // Show save dialog
+			} else {
+				ide.SaveFile(ide.filename)
+			}
+			return true
+		case 'n', 'N':
+			// Don't save, continue
+			return true
+		case 27: // ESC
+			// Cancel action
+			return false
+		}
+	}
+}

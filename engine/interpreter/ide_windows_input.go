@@ -364,6 +364,13 @@ func (ide *WindowsIDE) executeSubmenuAction() {
 		case 4: // Close
 			ide.closeCurrentFile()
 		case 5: // Exit
+			if ide.modified {
+				if !ide.promptSaveChanges() {
+					ide.menuActive = false
+					ide.submenuActive = false
+					return true
+				}
+			}
 			os.Exit(0)
 		}
 	case 1: // Run menu
