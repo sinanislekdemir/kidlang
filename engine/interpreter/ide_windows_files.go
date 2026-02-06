@@ -170,3 +170,36 @@ func (ide *WindowsIDE) closeCurrentFile() {
 	}
 	ide.newFile()
 }
+
+func (ide *WindowsIDE) BuildBinary() error {
+	if ide.filename == "" {
+		ide.showMessage("Error: Please save the file first before building a binary.")
+		return fmt.Errorf("no filename set")
+	}
+
+	tmpFile, err := os.CreateTemp("", "kidlang-*.kid")
+	if err != nil {
+		ide.showMessage("Error creating temp file: " + err.Error())
+		return err
+	}
+	tmpFilePath := tmpFile.Name()
+	defer os.Remove(tmpFilePath)
+
+	programText := strings.Join(ide.lines, "\r\n")
+	if _, err := tmpFile.WriteString(programText); err != nil {
+		ide.showMessage("Error writing temp file: " + err.Error())
+		return err
+	}
+	tmpFile.Close()
+
+	outputPath := ide.filename + ".bin" + GetEmbeddedBinaryExtension()
+
+	if err := BuildEmbeddedBinary(tmpFilePath, outputPath); err != nil {
+		ide.showMessage("Error building binary: " + err.Error())
+		return err
+	}
+
+	message := fmt.Sprintf("Successfully created: %s\n\nThis binary contains the embedded script and can be shared without requiring KidLang to be installed.", outputPath)
+	ide.showMessage(message)
+	return nil
+}

@@ -46,6 +46,7 @@ type IDEStrings struct {
 
 	// Run menu
 	RunRun   string
+	RunBuild string
 	RunStop  string
 	RunDebug string
 
@@ -150,6 +151,7 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 		EditClear:  "Clear",
 
 		RunRun:   "Run (F5)",
+		RunBuild: "Build Binary (F6)",
 		RunStop:  "Stop",
 		RunDebug: "Debug",
 
@@ -258,6 +260,7 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 		EditClear:  "Temizle",
 
 		RunRun:   "Çalıştır (F5)",
+		RunBuild: "Binary Oluştur (F6)",
 		RunStop:  "Durdur",
 		RunDebug: "Hata Ayıkla",
 
@@ -365,6 +368,7 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 		EditClear:  "Tyhjennä",
 
 		RunRun:   "Suorita (F5)",
+		RunBuild: "Rakenna binääri (F6)",
 		RunStop:  "Pysäytä",
 		RunDebug: "Virheenkorjaus",
 
@@ -472,6 +476,7 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 		EditClear:  "Löschen",
 
 		RunRun:   "Ausführen (F5)",
+		RunBuild: "Binärdatei erstellen (F6)",
 		RunStop:  "Stoppen",
 		RunDebug: "Debuggen",
 

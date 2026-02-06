@@ -350,7 +350,7 @@ func (ide *WindowsIDE) drawSubmenu() {
 	case 0: // File
 		items = []string{t.FileNew, t.FileOpen + "...", t.FileSave, t.FileSaveAs + "...", t.FileClose, t.FileExit}
 	case 1: // Run
-		items = []string{t.RunRun, t.RunStop, t.RunDebug}
+		items = []string{t.RunRun, t.RunBuild, t.RunStop, t.RunDebug}
 	case 2: // Examples
 		items = []string{t.ExamplesBrowse}
 	case 3: // Help

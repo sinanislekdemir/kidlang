@@ -317,3 +317,68 @@ func (ide *UnixIDE) showFileBrowser(openMode bool) {
 		}
 	}
 }
+
+func (ide *UnixIDE) BuildBinary() error {
+	goncurses.End()
+
+	if ide.filename == "" {
+		fmt.Println("Error: Please save the file first before building a binary.")
+		fmt.Println("\nPress Enter to continue...")
+		bufio.NewReader(os.Stdin).ReadString('\n')
+		fmt.Print("\033c")
+		ide.Init()
+		return fmt.Errorf("no filename set")
+	}
+
+	tmpFile, err := os.CreateTemp("", "kidlang-*.kid")
+	if err != nil {
+		fmt.Printf("Error creating temp file: %v\n", err)
+		fmt.Println("\nPress Enter to continue...")
+		bufio.NewReader(os.Stdin).ReadString('\n')
+		fmt.Print("\033c")
+		ide.Init()
+		return err
+	}
+	tmpFilePath := tmpFile.Name()
+	defer os.Remove(tmpFilePath)
+
+	programText := strings.Join(ide.lines, "\n")
+	if _, err := tmpFile.WriteString(programText); err != nil {
+		fmt.Printf("Error writing temp file: %v\n", err)
+		fmt.Println("\nPress Enter to continue...")
+		bufio.NewReader(os.Stdin).ReadString('\n')
+		fmt.Print("\033c")
+		ide.Init()
+		return err
+	}
+	tmpFile.Close()
+
+	outputPath := ide.filename + ".bin" + GetEmbeddedBinaryExtension()
+
+	fmt.Print("\033c")
+	fmt.Println("========================================")
+	fmt.Println("       Building Binary Executable")
+	fmt.Println("========================================")
+	fmt.Printf("\nInput:  %s\n", ide.filename)
+	fmt.Printf("Output: %s\n\n", outputPath)
+	fmt.Println("Building...")
+
+	if err := BuildEmbeddedBinary(tmpFilePath, outputPath); err != nil {
+		fmt.Printf("\nError building binary: %v\n", err)
+		fmt.Println("\nPress Enter to continue...")
+		bufio.NewReader(os.Stdin).ReadString('\n')
+		fmt.Print("\033c")
+		ide.Init()
+		return err
+	}
+
+	fmt.Println("\n✓ Successfully created binary executable!")
+	fmt.Printf("\nYou can now run: ./%s\n", outputPath)
+	fmt.Println("\nThis binary contains the embedded script and")
+	fmt.Println("can be shared without requiring KidLang to be installed.")
+	fmt.Println("\nPress Enter to continue...")
+	bufio.NewReader(os.Stdin).ReadString('\n')
+
+	fmt.Print("\033c")
+	return ide.Init()
+}

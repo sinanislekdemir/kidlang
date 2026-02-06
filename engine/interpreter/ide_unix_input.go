@@ -109,6 +109,9 @@ func (ide *UnixIDE) handleInput(key goncurses.Key) {
 	case goncurses.KEY_F5:
 		ide.Execute()
 		return
+	case goncurses.KEY_F6:
+		ide.BuildBinary()
+		return
 	}
 
 	// Editor keys (only when menu is not active)
@@ -239,6 +242,10 @@ func (ide *UnixIDE) handleMenuSelection() {
 			ide.menuActive = false
 			ide.submenuActive = false
 			ide.Execute()
+		case 1: // Build Binary (F6)
+			ide.menuActive = false
+			ide.submenuActive = false
+			ide.BuildBinary()
 		}
 	case 2: // Examples menu
 		switch ide.submenuSelected {

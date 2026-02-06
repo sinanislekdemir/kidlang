@@ -141,7 +141,7 @@ func (ide *UnixIDE) drawMenuDropdown() {
 	case 0: // File
 		items = []string{t.FileNew, t.FileOpen, t.FileSave, t.FileSaveAs, "---", t.FileExit}
 	case 1: // Run
-		items = []string{t.RunRun, "---", t.RunStop}
+		items = []string{t.RunRun, t.RunBuild, "---", t.RunStop}
 	case 2: // Examples
 		items = []string{t.ExamplesBrowse}
 	case 3: // Help

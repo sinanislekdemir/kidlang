@@ -28,6 +28,7 @@ const (
 	VK_F2     = 0x71
 	VK_F3     = 0x72
 	VK_F5     = 0x74
+	VK_F6     = 0x75
 	VK_F10    = 0x79
 )
 
@@ -235,6 +236,11 @@ func (ide *WindowsIDE) handleInput(key keyEventRecord) bool {
 		ide.draw()
 		return true
 
+	case VK_F6:
+		ide.BuildBinary()
+		ide.draw()
+		return true
+
 	case VK_UP:
 		if ide.cursorY > 0 {
 			ide.cursorY--
@@ -377,9 +383,11 @@ func (ide *WindowsIDE) executeSubmenuAction() {
 		switch ide.submenuSelected {
 		case 0: // Run (F5)
 			ide.Execute()
-		case 1: // Stop
+		case 1: // Build Binary (F6)
+			ide.BuildBinary()
+		case 2: // Stop
 			// TODO: implement stop
-		case 2: // Debug
+		case 3: // Debug
 			// TODO: implement debug
 		}
 	case 2: // Examples menu

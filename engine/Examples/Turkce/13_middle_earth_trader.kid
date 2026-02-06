@@ -23,7 +23,7 @@ yaz
 yaz === GUN kutu gun of 30 ===
 yaz Altın: kutu altin
 yaz Çanta: kutu dolu of kutu canta alan
-yaz Envanter - İksir: kutu iksir | Asa: kutu asa | Zırh: kutu zirh
+yaz Envanter iksir: kutu iksir | Asa: kutu asa | Zırh: kutu zirh
 yaz
 
 kutu i_fiyat = rastgele % 30 + 20
