@@ -260,7 +260,7 @@ func (ide *WindowsIDE) drawHighlightedLineAt(startX, y int, line string) {
 			break
 		}
 
-		color := colorWhite
+		var color uint16 = colorWhite
 		switch token.Kind {
 		case syntaxKeyword:
 			color = colorYellow
