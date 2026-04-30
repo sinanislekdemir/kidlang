@@ -72,14 +72,14 @@ goto menu
 square:
 ask Enter a number:
 box n = answer
-box result = sqr box n
+box result = sqr(box n)
 print Result: box n² = box result
 goto menu
 
 squareroot:
 ask Enter a number:
 box n = answer
-box result = sqrt box n
+box result = sqrt(box n)
 print Result: √box n = box result
 goto menu
 

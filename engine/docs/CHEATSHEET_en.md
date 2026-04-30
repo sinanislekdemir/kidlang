@@ -23,10 +23,10 @@ box name = box other
 ### Stack (dictionary/map)
 ```
 stack toys
-stack toys[1] = car        // or toys(1) = car
-stack toys[2] = ball       // or toys(2) = ball
-toys[1] = truck            // or toys(1) = truck
-print toys[1]              // or print toys(1)
+stack toys[1] = car
+stack toys[2] = ball
+toys[1] = truck
+print toys[1]
 ```
 
 ### File
@@ -64,15 +64,15 @@ box result = 2 ^ 3  // XOR for numbers, cipher for strings
 
 ## Math Functions
 ```
-sqrt 16       // Square root
-abs -5        // Absolute value
-sqr 4         // Square (4*4)
-sin 1.57      // Sine
-cos 0         // Cosine
-tan 0.785     // Tangent
-log 2.718     // Natural logarithm
-asin 0.5      // Arcsine
-acos 0.5      // Arccosine
+sqrt(16)      // Square root
+abs(-5)       // Absolute value
+sqr(4)        // Square (4*4)
+sin(1.57)     // Sine
+cos(0)        // Cosine
+tan(0.785)    // Tangent
+log(2.718)    // Natural logarithm
+asin(0.5)     // Arcsine
+acos(0.5)     // Arccosine
 ```
 
 ## String Operations
@@ -161,8 +161,8 @@ close out
 
 ## Special Values
 ```
-random  // Random integer
-now     // Current date/time
+random()  // Random integer
+now()     // Current date/time
 \n      // Newline character
 ```
 

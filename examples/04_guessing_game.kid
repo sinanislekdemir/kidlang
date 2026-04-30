@@ -6,7 +6,7 @@ print    NUMBER GUESSING GAME
 print ================================
 print
 
-box secret = random % 50 + 1
+box secret = random() % 50 + 1
 box tries = 0
 box max_tries = 7
 

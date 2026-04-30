@@ -44,7 +44,7 @@ func SeekLine(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 	fileVarName := ""
 	lineNumber := 0
 
-	localArguments, err := prepareArguments(memory, arguments)
+	localArguments, err := prepareArguments(memory, stack, arguments)
 	if err != nil {
 		return err
 	}
@@ -133,7 +133,7 @@ func WriteFile(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 		}
 	}
 
-	localArguments, err := prepareArguments(memory, arguments)
+	localArguments, err := prepareArguments(memory, stack, arguments)
 	if err != nil && !isStackSource {
 		return err
 	}
@@ -246,7 +246,7 @@ func ReadLine(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 	}
 
 	// Try to prepare arguments (might fail if box doesn't exist, which is OK)
-	localArguments, err := prepareArguments(memory, arguments)
+	localArguments, err := prepareArguments(memory, stack, arguments)
 	if err == nil {
 		for _, arg := range localArguments {
 			if arg.VariableType == TYPE_FILE {
@@ -359,7 +359,7 @@ func ReadFile(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 		}
 
 		// Try to prepare arguments (might fail if box doesn't exist, which is OK for read)
-		localArguments, err := prepareArguments(memory, arguments)
+		localArguments, err := prepareArguments(memory, stack, arguments)
 		if err == nil {
 			for _, arg := range localArguments {
 				if arg.VariableType == TYPE_FILE {
@@ -454,7 +454,7 @@ func ReadFile(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
  * Kidlang file handling functions
  */
 func OpenFile(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
-	localArguments, err := prepareArguments(memory, arguments)
+	localArguments, err := prepareArguments(memory, stack, arguments)
 	if err != nil {
 		return err
 	}

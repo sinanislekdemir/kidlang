@@ -35,14 +35,14 @@ schreib
 schreib Du wagst dich tiefer in den Wald...
 warte 1000
 
-kiste ereignis = zufall % 3
+kiste ereignis = zufall() % 3
 
 wenn kiste ereignis = 0 dann geh gold_finden
 wenn kiste ereignis = 1 dann geh monster_finden
 geh nichts_finden
 
 gold_finden:
-kiste gefunden = zufall % 20 + 10
+kiste gefunden = zufall() % 20 + 10
 kiste gold = kiste gold + kiste gefunden
 schreib Du hast kiste gefunden Goldmünzen gefunden! ✨
 schreib Gesamt Gold: kiste gold
@@ -51,7 +51,7 @@ geh anfang
 
 monster_finden:
 schreib Ein Monster erscheint! 👹
-kiste schaden = zufall % 30 + 10
+kiste schaden = zufall() % 30 + 10
 kiste gesundheit = kiste gesundheit - kiste schaden
 schreib Es greift dich mit kiste schaden Schaden an!
 schreib Verbleibende Gesundheit: kiste gesundheit

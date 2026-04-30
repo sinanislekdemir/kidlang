@@ -21,12 +21,16 @@ const (
 	ST_SCOPE_END   = 5
 	ST_CONDITION   = 6
 	ST_LOOP        = 7
+	ST_RETURN      = 8
+	ST_EXPRESSION  = 9
 
-	BOX  = "BOX"
-	END  = "END"
-	IF   = "IF"
-	THEN = "THEN"
-	FILE = "FILE"
+	BOX      = "BOX"
+	END      = "END"
+	IF       = "IF"
+	THEN     = "THEN"
+	FILE     = "FILE"
+	FUNCTION = "FUNCTION"
+	RETURN   = "RETURN"
 
 	// Maximum number of statements to execute before considering it an infinite loop
 	MAX_ITERATIONS = 1000000

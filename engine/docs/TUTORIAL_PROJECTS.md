@@ -30,7 +30,7 @@ Learn by building! This tutorial walks you through complete projects step-by-ste
 **Step 1: Basic structure**
 ```kidlang
 print === Number Guessing Game ===
-box secret = random % 10 + 1
+box secret = random() % 10 + 1
 print I'm thinking of a number between 1 and 10
 ```
 
@@ -104,7 +104,7 @@ print ================================
 print   NUMBER GUESSING GAME
 print ================================
 
-box secret = random % 50 + 1
+box secret = random() % 50 + 1
 box tries = 0
 box max_tries = 7
 
@@ -255,7 +255,7 @@ goto calculator
 sqrt_op:
 ask Enter number:
 box num = answer
-print √box num = sqrt box num
+print √box num = sqrt(box num)
 goto calculator
 
 exit:
@@ -470,11 +470,11 @@ print
 print Question box current of box questions
 
 // Generate random numbers
-box a = random % 20 + 1
-box b = random % 20 + 1
+box a = random() % 20 + 1
+box b = random() % 20 + 1
 
 // Random operation
-box op = random % 4
+box op = random() % 4
 
 if box op = 0 then goto add_q
 if box op = 1 then goto sub_q
@@ -623,7 +623,7 @@ if answer = 3 then goto use_potion
 goto battle
 
 player_attack:
-box damage = box player_attack + random % 10
+box damage = box player_attack + random() % 10
 box enemy_health = box enemy_health - box damage
 print You attack for box damage damage!
 sleep 1000
@@ -649,7 +649,7 @@ print
 print Enemy's turn!
 sleep 1000
 
-box damage = box enemy_attack + random % 5
+box damage = box enemy_attack + random() % 5
 
 // Apply defend bonus
 if box defend_bonus > 0 then

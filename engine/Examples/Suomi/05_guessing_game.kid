@@ -7,7 +7,7 @@ tulosta    NUMERONARVAUSPELI
 tulosta ================================
 tulosta
 
-laatikko salaisuus = satunnainen % 50 + 1
+laatikko salaisuus = satunnainen() % 50 + 1
 laatikko yritykset = 0
 laatikko max_yritykset = 7
 

@@ -82,8 +82,8 @@ func TestPrintRandom(t *testing.T) {
 			VariableType: TYPE_STRING,
 			String:       "Hello",
 		}, {
-			VariableType: TYPE_STRING,
-			String:       "RaNdoM",
+			VariableType: TYPE_CALL,
+			String:       "RaNdoM()",
 		},
 	}
 	err = Print(memory, stack, arguments)

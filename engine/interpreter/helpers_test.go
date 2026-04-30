@@ -23,6 +23,7 @@ func TestTokenizer(t *testing.T) {
 		{"'a b' + c", []string{"'a b'", "+", "c"}},
 		{"\"a b\" + c", []string{"\"a b\"", "+", "c"}},
 		{" a + b ", []string{"a", "+", "b"}},
+		{"max(add(2, 3), min(10, 4))", []string{"max(add(2, 3), min(10, 4))"}},
 	}
 
 	for _, test := range tests {

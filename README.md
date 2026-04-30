@@ -17,6 +17,7 @@
 - **Smart Type System**: Automatically handles numbers and text - kids don't worry about types
 - **Flexible Comparisons**: `"1"` equals `1` - the language figures it out
 - **Lists/Stacks**: Store collections with flexible indexing (e.g., `stack toys[1] = "robot"`)
+- **Functions**: Define reusable functions and call builtins like `sqrt(16)` or `len(box name)`
 - **File Operations**: Read and write files easily
 - **Control Flow**: Simple if/goto for logic, loops for repetition
 - **Comments**: Use `//` to add notes to your code

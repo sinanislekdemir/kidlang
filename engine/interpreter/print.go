@@ -37,7 +37,7 @@ func Print(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 		}
 	}
 
-	localArguments, err := processArguments(memory, cleanedArguments)
+	localArguments, err := processArguments(memory, stack, cleanedArguments)
 	if err != nil {
 		return err
 	}

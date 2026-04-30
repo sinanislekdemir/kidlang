@@ -161,22 +161,22 @@ KidLang has special math powers!
 
 ```kidlang
 // Square root (what number times itself equals this?)
-box a = sqrt 16
+box a = sqrt(16)
 print box a
 // Result: 4 (because 4 × 4 = 16)
 
 // Square (multiply a number by itself)
-box b = sqr 5
+box b = sqr(5)
 print box b
 // Result: 25 (because 5 × 5 = 25)
 
 // Absolute value (remove the minus sign)
-box c = abs -10
+box c = abs(-10)
 print box c
 // Result: 10
 
 // Random number between 0 and 1
-box d = random
+box d = random()
 print You got: box d
 ```
 
@@ -317,7 +317,7 @@ Convert temperatures from Fahrenheit to Celsius!
 (Hint: Celsius = (Fahrenheit - 32) × 5 / 9)
 
 ### 3. 🎲 Dice Roller
-Use `random` to simulate rolling dice!
+Use `random()` to simulate rolling dice!
 
 ### 4. 📊 Grade Calculator
 Ask for test scores and calculate the average!

@@ -35,14 +35,14 @@ yaz
 yaz Ormanın derinliklerine doğru ilerliyorsun...
 bekle 1000
 
-kutu olay = rastgele % 3
+kutu olay = rastgele() % 3
 
 eger kutu olay = 0 ise git altin_bul
 eger kutu olay = 1 ise git canavar_bul
 git hicbisey_bul
 
 altin_bul:
-kutu buldu = rastgele % 20 + 10
+kutu buldu = rastgele() % 20 + 10
 kutu altin = kutu altin + kutu buldu
 yaz kutu buldu altın buldun! ✨
 yaz Toplam altın: kutu altin
@@ -51,7 +51,7 @@ git basla
 
 canavar_bul:
 yaz Bir canavar belirdi! 👹
-kutu hasar = rastgele % 30 + 10
+kutu hasar = rastgele() % 30 + 10
 kutu saglik = kutu saglik - kutu hasar
 yaz Sana kutu hasar hasar verdi!
 yaz Kalan sağlık: kutu saglik

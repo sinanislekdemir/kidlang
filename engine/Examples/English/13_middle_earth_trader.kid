@@ -2,6 +2,41 @@ EN
 // Middle Earth Trader - A trading adventure game
 // Buy low, sell high, and earn 1000 gold!
 
+function market_price(box base, box spread)
+random() % box spread + box base
+end
+
+function total_price(box price, box amount)
+box price * box amount
+end
+
+function armor_space(box amount)
+box amount * 2
+end
+
+function bag_space_left(box bag, box used)
+box bag - box used
+end
+
+function safe_bandit_gold(box gold)
+if box gold > 30 then
+   return box gold - 30
+end
+0
+end
+
+function trader_rank(box gold)
+if box gold >= 1000 then
+   return Master Merchant
+end
+
+if box gold >= 500 then
+   return Strong Trader
+end
+
+Learning Trader
+end
+
 print ====================================
 print   MIDDLE EARTH TRADER
 print ====================================
@@ -23,12 +58,13 @@ print
 print === DAY box day of 30 ===
 print Gold: box gold
 print Bag: box used of box bag spaces
+print Free space: bag_space_left(box bag, box used)
 print Inventory - Potions: box potions | Wands: box wands | Armor: box armor
 print
 
-box p_price = random % 30 + 20
-box w_price = random % 50 + 40  
-box a_price = random % 80 + 60
+box p_price = market_price(20, 30)
+box w_price = market_price(40, 50)
+box a_price = market_price(60, 80)
 
 print === MARKET PRICES ===
 print Potions: box p_price gold
@@ -61,7 +97,7 @@ goto start
 buy_pot:
 ask How many potions?
 box amt = answer
-box cost = box p_price * box amt
+box cost = total_price(box p_price, box amt)
 box need = box used + box amt
 if box cost > box gold then
    print Not enough gold!
@@ -83,7 +119,7 @@ goto start
 buy_wand:
 ask How many wands?
 box amt = answer
-box cost = box w_price * box amt
+box cost = total_price(box w_price, box amt)
 box need = box used + box amt
 if box cost > box gold then
    print Not enough gold!
@@ -105,8 +141,8 @@ goto start
 buy_armor:
 ask How many armor sets?
 box amt = answer
-box cost = box a_price * box amt
-box need = box used + box amt * 2
+box cost = total_price(box a_price, box amt)
+box need = box used + armor_space(box amt)
 if box cost > box gold then
    print Not enough gold!
    sleep 1000
@@ -119,7 +155,7 @@ if box need > box bag then
 end
 box gold = box gold - box cost
 box armor = box armor + box amt
-box used = box used + box amt * 2
+box used = box used + armor_space(box amt)
 print Bought box amt armor for box cost gold!
 sleep 1000
 goto start
@@ -132,7 +168,7 @@ if box amt > box potions then
    sleep 1000
    goto start
 end
-box earn = box p_price * box amt
+box earn = total_price(box p_price, box amt)
 box gold = box gold + box earn
 box potions = box potions - box amt
 box used = box used - box amt
@@ -148,7 +184,7 @@ if box amt > box wands then
    sleep 1000
    goto start
 end
-box earn = box w_price * box amt
+box earn = total_price(box w_price, box amt)
 box gold = box gold + box earn
 box wands = box wands - box amt
 box used = box used - box amt
@@ -164,10 +200,10 @@ if box amt > box armor then
    sleep 1000
    goto start
 end
-box earn = box a_price * box amt
+box earn = total_price(box a_price, box amt)
 box gold = box gold + box earn
 box armor = box armor - box amt
-box used = box used - box amt * 2
+box used = box used - armor_space(box amt)
 print Sold box amt armor for box earn gold!
 sleep 1000
 goto start
@@ -178,7 +214,7 @@ print Traveling to next city...
 sleep 1000
 box day = box day + 1
 
-box event = random % 8
+box event = random() % 8
 
 if box event = 0 then
    print A friendly wizard gives you 50 gold! ✨
@@ -188,12 +224,7 @@ end
 
 if box event = 1 then
    print Bandits attack! Lost 30 gold! ⚔️
-   if box gold > 30 then
-      box gold = box gold - 30
-   end
-   if box gold <= 30 then
-      box gold = 0
-   end
+   box gold = safe_bandit_gold(box gold)
    sleep 1500
 end
 
@@ -217,7 +248,8 @@ print ====================================
 print   CONGRATULATIONS!
 print ====================================
 print You earned 1000 gold in box day days!
-print You are a Master Merchant! 🏆
+print Rank: trader_rank(box gold)
+print You are ready for the next market! 🏆
 print
 goto end
 
@@ -228,6 +260,7 @@ print   TIME IS UP!
 print ====================================
 print 30 days have passed...
 print Final gold: box gold
+print Rank: trader_rank(box gold)
 print
 if box gold >= 500 then
    print Not bad for a merchant!

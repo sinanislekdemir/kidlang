@@ -15,7 +15,7 @@ func Assign(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 		return nil
 	}
 
-	localArguments, err := processArguments(memory, arguments[1:])
+	localArguments, err := processArguments(memory, stack, arguments[1:])
 	if err != nil {
 		return err
 	}

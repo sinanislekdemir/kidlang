@@ -15,7 +15,7 @@ func tokenizer(text string) []string {
 	// Split text by breakers, but keep [] and () attached to preceding token
 	accumulator := ""
 	appendRaw := false
-	inBracket := false
+	bracketDepth := 0
 	for _, c := range text {
 		if c == '\'' || c == '"' {
 			accumulator += string(c)
@@ -24,16 +24,18 @@ func tokenizer(text string) []string {
 		}
 		// Track brackets to keep them with the variable name
 		if c == '[' || c == '(' {
-			inBracket = true
+			bracketDepth++
 			accumulator += string(c)
 			continue
 		}
 		if c == ']' || c == ')' {
-			inBracket = false
+			if bracketDepth > 0 {
+				bracketDepth--
+			}
 			accumulator += string(c)
 			continue
 		}
-		if slices.Contains(breakers, string(c)) && !appendRaw && !inBracket {
+		if slices.Contains(breakers, string(c)) && !appendRaw && bracketDepth == 0 {
 			if len(accumulator) > 0 {
 				parts = append(parts, accumulator)
 			}

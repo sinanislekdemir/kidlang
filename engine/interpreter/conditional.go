@@ -57,7 +57,7 @@ func If(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 
 	results := []bool{}
 	for _, condition := range conditions {
-		result, err := evaluateCondition(memory, condition)
+		result, err := evaluateCondition(memory, stack, condition)
 		if err != nil {
 			return err
 		}
@@ -83,7 +83,7 @@ func If(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 	return nil
 }
 
-func evaluateCondition(memory KLMemory, arguments []VariableBox) (bool, error) {
+func evaluateCondition(memory KLMemory, stack *KLStack, arguments []VariableBox) (bool, error) {
 	leftTokens := make([]VariableBox, 0)
 	rightTokens := make([]VariableBox, 0)
 	operator := ""
@@ -100,11 +100,11 @@ func evaluateCondition(memory KLMemory, arguments []VariableBox) (bool, error) {
 		}
 	}
 
-	leftArguments, err := processArguments(memory, leftTokens)
+	leftArguments, err := processArguments(memory, stack, leftTokens)
 	if err != nil {
 		return false, err
 	}
-	rightArguments, err := processArguments(memory, rightTokens)
+	rightArguments, err := processArguments(memory, stack, rightTokens)
 	if err != nil {
 		return false, err
 	}

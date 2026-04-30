@@ -7,7 +7,7 @@ yaz    SAYI TAHMİN OYUNU
 yaz ================================
 yaz
 
-kutu gizli = rastgele % 50 + 1
+kutu gizli = rastgele() % 50 + 1
 kutu denemeler = 0
 kutu maks_deneme = 7
 

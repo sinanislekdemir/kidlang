@@ -7,7 +7,7 @@ import (
 )
 
 func Exec(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
-	localArguments, err := processArguments(memory, arguments)
+	localArguments, err := processArguments(memory, stack, arguments)
 	if err != nil {
 		return err
 	}

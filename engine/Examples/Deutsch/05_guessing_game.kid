@@ -7,7 +7,7 @@ schreib    ZAHLENRATESPIEL
 schreib ================================
 schreib
 
-kiste geheimnis = zufall % 50 + 1
+kiste geheimnis = zufall() % 50 + 1
 kiste versuche = 0
 kiste max_versuche = 7
 

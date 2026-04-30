@@ -35,14 +35,14 @@ print
 print You venture deeper into the forest...
 sleep 1000
 
-box event = random % 3
+box event = random() % 3
 
 if box event = 0 then goto find_gold
 if box event = 1 then goto find_monster
 goto find_nothing
 
 find_gold:
-box found = random % 20 + 10
+box found = random() % 20 + 10
 box gold = box gold + box found
 print You found box found gold coins! ✨
 print Total gold: box gold
@@ -51,7 +51,7 @@ goto start
 
 find_monster:
 print A monster appears! 👹
-box damage = random % 30 + 10
+box damage = random() % 30 + 10
 box health = box health - box damage
 print It attacks you for box damage damage!
 print Health remaining: box health

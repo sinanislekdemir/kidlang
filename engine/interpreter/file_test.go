@@ -5,7 +5,13 @@ import (
 	"testing"
 )
 
+func resetTestLanguage(t *testing.T) {
+	t.Helper()
+	activeLanguage = LANG_EN
+}
+
 func TestOpenFile(t *testing.T) {
+	resetTestLanguage(t)
 	tests := []struct {
 		name      string
 		setup     func() (KLMemory, *KLStack, []VariableBox, string)
@@ -84,6 +90,7 @@ func TestOpenFile(t *testing.T) {
 }
 
 func TestCloseFile(t *testing.T) {
+	resetTestLanguage(t)
 	tmpFile := "test_close.txt"
 	os.WriteFile(tmpFile, []byte("test"), 0644)
 	defer os.Remove(tmpFile)
@@ -117,6 +124,7 @@ func TestCloseFile(t *testing.T) {
 }
 
 func TestWriteFile(t *testing.T) {
+	resetTestLanguage(t)
 	tmpFile := "test_write.txt"
 	defer os.Remove(tmpFile)
 
@@ -152,6 +160,7 @@ func TestWriteFile(t *testing.T) {
 }
 
 func TestReadFile(t *testing.T) {
+	resetTestLanguage(t)
 	tmpFile := "test_read.txt"
 	testContent := "Test content"
 	os.WriteFile(tmpFile, []byte(testContent), 0644)
@@ -188,6 +197,7 @@ func TestReadFile(t *testing.T) {
 }
 
 func TestReadLine(t *testing.T) {
+	resetTestLanguage(t)
 	tmpFile := "test_readline.txt"
 	os.WriteFile(tmpFile, []byte("Line 1\nLine 2\n"), 0644)
 	defer os.Remove(tmpFile)
@@ -222,6 +232,7 @@ func TestReadLine(t *testing.T) {
 }
 
 func TestSeekLine(t *testing.T) {
+	resetTestLanguage(t)
 	tmpFile := "test_seek.txt"
 	os.WriteFile(tmpFile, []byte("Line 1\nLine 2\nLine 3\n"), 0644)
 	defer os.Remove(tmpFile)
@@ -262,6 +273,7 @@ func TestSeekLine(t *testing.T) {
 }
 
 func TestAutoType(t *testing.T) {
+	resetTestLanguage(t)
 	tests := []struct {
 		name  string
 		input string
@@ -284,6 +296,7 @@ func TestAutoType(t *testing.T) {
 }
 
 func TestWriteFileWithStack(t *testing.T) {
+	resetTestLanguage(t)
 	tmpFile := "test_write_stack.txt"
 	defer os.Remove(tmpFile)
 
@@ -326,6 +339,7 @@ func TestWriteFileWithStack(t *testing.T) {
 }
 
 func TestReadFileToStack(t *testing.T) {
+	resetTestLanguage(t)
 	tmpFile := "test_read_stack.txt"
 	os.WriteFile(tmpFile, []byte("10\n20\n30\n"), 0644)
 	defer os.Remove(tmpFile)

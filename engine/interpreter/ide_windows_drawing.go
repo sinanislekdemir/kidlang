@@ -16,6 +16,7 @@ const (
 	colorCyan          = 0x0B // Cyan on black
 	colorGreen         = 0x0A // Green on black
 	colorMagenta       = 0x0D // Magenta on black
+	colorBlue          = 0x09 // Blue on black
 	colorBlackOnYellow = 0x60 // Black on yellow
 	colorBlackOnWhite  = 0x70 // Black on white
 	colorYellowOnBlack = 0x0E // Yellow on black
@@ -252,48 +253,28 @@ func (ide *WindowsIDE) drawEditor() {
 // drawHighlightedLineAt draws a line with syntax highlighting at a specific position
 func (ide *WindowsIDE) drawHighlightedLineAt(startX, y int, line string) {
 	t := getIDETranslation()
-	keywords := t.SyntaxKeywords
-
 	x := startX
 
-	// Check if line starts with REM (comment)
-	if len(line) >= 3 && strings.ToUpper(line[:3]) == "REM" {
-		screenBuf.writeString(x, y, line, colorGreen)
-		x += len([]rune(line))
-		// Clear rest of line
-		for ; x < ide.maxX; x++ {
-			screenBuf.set(x, y, ' ', colorWhite)
-		}
-		return
-	}
-
-	words := splitPreservingSpaces(line)
-
-	for _, word := range words {
+	for _, token := range tokenizeSyntax(line, t.SyntaxKeywords) {
 		if x >= ide.maxX {
 			break
 		}
 
-		// Check if it's a keyword
-		wordUpper := strings.ToUpper(word)
-		if keywords[wordUpper] {
-			screenBuf.writeString(x, y, word, colorYellow)
-		} else {
-			var color uint16
-			// Check if it's a string (starts with quote)
-			if len(word) > 0 && word[0] == '"' {
-				color = colorCyan
-			} else if len(word) > 0 && word[0] >= '0' && word[0] <= '9' {
-				// Number
-				color = colorMagenta
-			} else {
-				// Default
-				color = colorWhite
-			}
-			screenBuf.writeString(x, y, word, color)
+		color := colorWhite
+		switch token.Kind {
+		case syntaxKeyword:
+			color = colorYellow
+		case syntaxString:
+			color = colorCyan
+		case syntaxComment:
+			color = colorGreen
+		case syntaxNumber:
+			color = colorMagenta
+		case syntaxFunction:
+			color = colorBlue
 		}
-
-		x += len([]rune(word))
+		screenBuf.writeString(x, y, token.Text, color)
+		x += len([]rune(token.Text))
 	}
 
 	// Clear rest of line

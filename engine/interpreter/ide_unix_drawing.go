@@ -188,108 +188,44 @@ func calculateLanguageMenuX(maxX int, t IDEStrings) int {
 	return totalWidth
 }
 
-// isLetter checks if a rune is a letter (including UTF-8 letters)
-func isLetter(ch rune) bool {
-	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') ||
-		(ch >= 'à' && ch <= 'ö') || (ch >= 'ø' && ch <= 'ÿ') || // Latin extended
-		(ch >= 'Ğ' && ch <= 'ğ') || (ch >= 'İ' && ch <= 'ı') || // Turkish
-		(ch >= 'Ş' && ch <= 'ş') || (ch >= 'Ç' && ch <= 'ç') || // Turkish
-		(ch >= 'Ö' && ch <= 'ö') || (ch >= 'Ü' && ch <= 'ü') || // German/Turkish
-		(ch >= 'Ä' && ch <= 'ä') // German
-}
-
-// isDigit checks if a rune is a digit
-func isDigit(ch rune) bool {
-	return ch >= '0' && ch <= '9'
-}
-
 // drawSyntaxHighlightedLine draws a line with syntax highlighting
 func (ide *UnixIDE) drawSyntaxHighlightedLine(y, x int, line string) {
-	// Get keywords from translation
 	t := getIDETranslation()
-	keywords := t.SyntaxKeywords
-
 	col := x
-	i := 0
-	inString := false
 
-	// Convert line to runes for proper UTF-8 handling
-	runes := []rune(line)
+	for _, token := range tokenizeSyntax(line, t.SyntaxKeywords) {
+		switch token.Kind {
+		case syntaxKeyword:
+			ide.screen.ColorOn(2)
+		case syntaxString:
+			ide.screen.ColorOn(3)
+		case syntaxComment:
+			ide.screen.ColorOn(6)
+		case syntaxNumber:
+			ide.screen.ColorOn(8)
+		case syntaxFunction:
+			ide.screen.ColorOn(9)
+		default:
+			ide.screen.ColorOn(1)
+		}
 
-	for i < len(runes) {
-		ch := runes[i]
+		ide.screen.MovePrint(y, col, token.Text)
 
-		// Handle comments
-		if !inString && i+1 < len(runes) && runes[i] == '/' && runes[i+1] == '/' {
-			ide.screen.ColorOn(6) // Green for comments
-			ide.screen.MovePrint(y, col, string(runes[i:]))
+		switch token.Kind {
+		case syntaxKeyword:
+			ide.screen.ColorOff(2)
+		case syntaxString:
+			ide.screen.ColorOff(3)
+		case syntaxComment:
 			ide.screen.ColorOff(6)
-			return
-		}
-
-		// Handle strings
-		if ch == '"' {
-			inString = !inString
-			if inString {
-				// Find end of string
-				end := i + 1
-				for end < len(runes) && runes[end] != '"' {
-					end++
-				}
-				if end < len(runes) {
-					end++ // Include closing quote
-				}
-				ide.screen.ColorOn(3) // Cyan for strings
-				ide.screen.MovePrint(y, col, string(runes[i:end]))
-				ide.screen.ColorOff(3)
-				col += end - i
-				i = end
-				inString = false
-				continue
-			}
-		}
-
-		// Handle keywords and identifiers
-		if isLetter(ch) {
-			// Extract word
-			start := i
-			for i < len(runes) && (isLetter(runes[i]) || isDigit(runes[i]) || runes[i] == '_') {
-				i++
-			}
-			word := string(runes[start:i])
-
-			if keywords[strings.ToUpper(word)] {
-				ide.screen.ColorOn(2) // Yellow for keywords
-				ide.screen.MovePrint(y, col, word)
-				ide.screen.ColorOff(2)
-			} else {
-				ide.screen.ColorOn(1) // White for identifiers
-				ide.screen.MovePrint(y, col, word)
-				ide.screen.ColorOff(1)
-			}
-			col += len([]rune(word))
-			continue
-		}
-
-		// Handle numbers
-		if isDigit(ch) {
-			start := i
-			for i < len(runes) && (isDigit(runes[i]) || runes[i] == '.') {
-				i++
-			}
-			number := string(runes[start:i])
-			ide.screen.ColorOn(8) // Magenta for numbers
-			ide.screen.MovePrint(y, col, number)
+		case syntaxNumber:
 			ide.screen.ColorOff(8)
-			col += len(number)
-			continue
+		case syntaxFunction:
+			ide.screen.ColorOff(9)
+		default:
+			ide.screen.ColorOff(1)
 		}
 
-		// Everything else (operators, punctuation)
-		ide.screen.ColorOn(1) // White
-		ide.screen.MovePrint(y, col, string(ch))
-		ide.screen.ColorOff(1)
-		col++
-		i++
+		col += len([]rune(token.Text))
 	}
 }

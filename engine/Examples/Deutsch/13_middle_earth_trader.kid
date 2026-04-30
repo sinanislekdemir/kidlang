@@ -2,6 +2,41 @@ DE
 // Mittelerde Händler - Ein Handelsabenteuer
 // Kaufe günstig, verkaufe teuer, verdiene 1000 Gold!
 
+funktion marktpreis(kiste basis, kiste spannweite)
+zufall() % kiste spannweite + kiste basis
+ende
+
+funktion gesamtpreis(kiste preis, kiste menge)
+kiste preis * kiste menge
+ende
+
+funktion ruestungsplatz(kiste menge)
+kiste menge * 2
+ende
+
+funktion freier_platz(kiste tasche, kiste belegt)
+kiste tasche - kiste belegt
+ende
+
+funktion sicheres_banditen_gold(kiste gold)
+wenn kiste gold > 30 dann
+   rueckgabe kiste gold - 30
+ende
+0
+ende
+
+funktion haendler_titel(kiste gold)
+wenn kiste gold >= 1000 dann
+   rueckgabe Meisterhaendler
+ende
+
+wenn kiste gold >= 500 dann
+   rueckgabe Starker Haendler
+ende
+
+Lernender Haendler
+ende
+
 schreib ====================================
 schreib   MITTELERDE HAENDLER
 schreib ====================================
@@ -23,12 +58,13 @@ schreib
 schreib === TAG kiste tag of 30 ===
 schreib Gold: kiste gold
 schreib Tasche: kiste belegt of kiste tasche Plätzen
+schreib Freier Platz: freier_platz(kiste tasche, kiste belegt)
 schreib Inventar - Tränke: kiste traenke | Stäbe: kiste staebe | Rüstung: kiste ruestung
 schreib
 
-kiste t_preis = zufall % 30 + 20
-kiste s_preis = zufall % 50 + 40  
-kiste r_preis = zufall % 80 + 60
+kiste t_preis = marktpreis(20, 30)
+kiste s_preis = marktpreis(40, 50)  
+kiste r_preis = marktpreis(60, 80)
 
 schreib === MARKTPREISE ===
 schreib Tränke: kiste t_preis Gold
@@ -61,7 +97,7 @@ geh anfang
 traenke_kaufen:
 frag Wie viele Tränke?
 kiste menge = antwort
-kiste kosten = kiste t_preis * kiste menge
+kiste kosten = gesamtpreis(kiste t_preis, kiste menge)
 kiste bedarf = kiste belegt + kiste menge
 wenn kiste kosten > kiste gold dann
    schreib Nicht genug Gold!
@@ -83,7 +119,7 @@ geh anfang
 staebe_kaufen:
 frag Wie viele Stäbe?
 kiste menge = antwort
-kiste kosten = kiste s_preis * kiste menge
+kiste kosten = gesamtpreis(kiste s_preis, kiste menge)
 kiste bedarf = kiste belegt + kiste menge
 wenn kiste kosten > kiste gold dann
    schreib Nicht genug Gold!
@@ -105,8 +141,8 @@ geh anfang
 ruestung_kaufen:
 frag Wie viele Rüstungen?
 kiste menge = antwort
-kiste kosten = kiste r_preis * kiste menge
-kiste bedarf = kiste belegt + kiste menge * 2
+kiste kosten = gesamtpreis(kiste r_preis, kiste menge)
+kiste bedarf = kiste belegt + ruestungsplatz(kiste menge)
 wenn kiste kosten > kiste gold dann
    schreib Nicht genug Gold!
    warte 1000
@@ -119,7 +155,7 @@ wenn kiste bedarf > kiste tasche dann
 ende
 kiste gold = kiste gold - kiste kosten
 kiste ruestung = kiste ruestung + kiste menge
-kiste belegt = kiste belegt + kiste menge * 2
+kiste belegt = kiste belegt + ruestungsplatz(kiste menge)
 schreib kiste menge Rüstungen für kiste kosten Gold gekauft!
 warte 1000
 geh anfang
@@ -132,7 +168,7 @@ wenn kiste menge > kiste traenke dann
    warte 1000
    geh anfang
 ende
-kiste verdienst = kiste t_preis * kiste menge
+kiste verdienst = gesamtpreis(kiste t_preis, kiste menge)
 kiste gold = kiste gold + kiste verdienst
 kiste traenke = kiste traenke - kiste menge
 kiste belegt = kiste belegt - kiste menge
@@ -148,7 +184,7 @@ wenn kiste menge > kiste staebe dann
    warte 1000
    geh anfang
 ende
-kiste verdienst = kiste s_preis * kiste menge
+kiste verdienst = gesamtpreis(kiste s_preis, kiste menge)
 kiste gold = kiste gold + kiste verdienst
 kiste staebe = kiste staebe - kiste menge
 kiste belegt = kiste belegt - kiste menge
@@ -164,10 +200,10 @@ wenn kiste menge > kiste ruestung dann
    warte 1000
    geh anfang
 ende
-kiste verdienst = kiste r_preis * kiste menge
+kiste verdienst = gesamtpreis(kiste r_preis, kiste menge)
 kiste gold = kiste gold + kiste verdienst
 kiste ruestung = kiste ruestung - kiste menge
-kiste belegt = kiste belegt - kiste menge * 2
+kiste belegt = kiste belegt - ruestungsplatz(kiste menge)
 schreib kiste menge Rüstungen für kiste verdienst Gold verkauft!
 warte 1000
 geh anfang
@@ -178,7 +214,7 @@ schreib Reise zur nächsten Stadt...
 warte 1000
 kiste tag = kiste tag + 1
 
-kiste ereignis = zufall % 8
+kiste ereignis = zufall() % 8
 
 wenn kiste ereignis = 0 dann
    schreib Ein freundlicher Zauberer gibt dir 50 Gold! ✨
@@ -188,12 +224,7 @@ ende
 
 wenn kiste ereignis = 1 dann
    schreib Banditen greifen an! 30 Gold verloren! ⚔️
-   wenn kiste gold > 30 dann
-      kiste gold = kiste gold - 30
-   ende
-   wenn kiste gold <= 30 dann
-      kiste gold = 0
-   ende
+   kiste gold = sicheres_banditen_gold(kiste gold)
    warte 1500
 ende
 
@@ -217,7 +248,8 @@ schreib ====================================
 schreib   GLÜCKWUNSCH!
 schreib ====================================
 schreib Du hast 1000 Gold in kiste tag Tagen verdient!
-schreib Du bist ein Meisterhändler! 🏆
+schreib Titel: haendler_titel(kiste gold)
+schreib Du bist bereit fuer den naechsten Markt! 🏆
 schreib
 geh ende
 
@@ -228,6 +260,7 @@ schreib   ZEIT IST UM!
 schreib ====================================
 schreib 30 Tage sind vergangen...
 schreib Finales Gold: kiste gold
+schreib Titel: haendler_titel(kiste gold)
 schreib
 wenn kiste gold >= 500 dann
    schreib Nicht schlecht für einen Händler!

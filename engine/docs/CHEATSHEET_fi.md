@@ -23,10 +23,10 @@ laatikko nimi = laatikko toinen
 ### Lista (sanakirja/kartta)
 ```
 lista lelut
-lista lelut[1] = auto          // tai lelut(1) = auto
-lista lelut[2] = pallo         // tai lelut(2) = pallo
-lelut[1] = kuorma-auto         // tai lelut(1) = kuorma-auto
-tulosta lelut[1]               // tai tulosta lelut(1)
+lista lelut[1] = auto
+lista lelut[2] = pallo
+lelut[1] = kuorma-auto
+tulosta lelut[1]
 ```
 
 ### Tiedosto
@@ -67,12 +67,12 @@ laatikko tulos = 2 ^ 3  // XOR numeroille, salaus merkkijonoille
 neliojuuri 16     // Neliöjuuri
 itseisarvo -5     // Itseisarvo
 nelio 4           // Neliö (4*4)
-sin 1.57          // Sini
-cos 0             // Kosini
-tan 0.785         // Tangentti
-log 2.718         // Luonnollinen logaritmi
-asin 0.5          // Arkussini
-acos 0.5          // Arkuskosini
+sin(1.57)         // Sini
+cos(0)            // Kosini
+tan(0.785)        // Tangentti
+log(2.718)        // Luonnollinen logaritmi
+asin(0.5)         // Arkussini
+acos(0.5)         // Arkuskosini
 ```
 
 ## Merkkijono-operaatiot

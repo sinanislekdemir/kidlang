@@ -35,14 +35,14 @@ tulosta
 tulosta Uskallaudut syvemmälle metsään...
 odota 1000
 
-laatikko tapahtuma = satunnainen % 3
+laatikko tapahtuma = satunnainen() % 3
 
 jos laatikko tapahtuma = 0 niin mene loyda_kulta
 jos laatikko tapahtuma = 1 niin mene loyda_hirvio
 mene loyda_ei_mitaan
 
 loyda_kulta:
-laatikko loytyi = satunnainen % 20 + 10
+laatikko loytyi = satunnainen() % 20 + 10
 laatikko kulta = laatikko kulta + laatikko loytyi
 tulosta Löysit laatikko loytyi kultakolikkoa! ✨
 tulosta Kulta yhteensä: laatikko kulta
@@ -51,7 +51,7 @@ mene aloita
 
 loyda_hirvio:
 tulosta Hirviö ilmestyy! 👹
-laatikko vahinko = satunnainen % 30 + 10
+laatikko vahinko = satunnainen() % 30 + 10
 laatikko terveys = laatikko terveys - laatikko vahinko
 tulosta Se hyökkää sinua vastaan laatikko vahinko vahingolla!
 tulosta Jäljellä oleva terveys: laatikko terveys

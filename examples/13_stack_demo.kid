@@ -9,7 +9,7 @@ stack scores
 // Add some scores
 stack scores[1] = 85
 stack scores[2] = 92
-stack scores(3) = 78
+stack scores[3] = 78
 stack scores[4] = 95
 
 print Test Scores:
@@ -28,7 +28,7 @@ print
 stack inventory
 stack inventory[apples] = 5
 stack inventory[oranges] = 3
-stack inventory(bananas) = 7
+stack inventory[bananas] = 7
 
 print Fruit Inventory:
 print Apples: stack inventory[apples]

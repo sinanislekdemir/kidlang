@@ -161,22 +161,22 @@ KidLangilla on erityisiä matematiikkavoimia!
 
 ```kidlang
 // Neliöjuuri (mikä luku kerrottuna itsellään antaa tämän?)
-laatikko a = sqrt 16
+laatikko a = neliojuuri(16)
 tulosta laatikko a
 // Tulos: 4 (koska 4 × 4 = 16)
 
 // Neliö (kerro luku itsellään)
-laatikko b = sqr 5
+laatikko b = nelio(5)
 tulosta laatikko b
 // Tulos: 25 (koska 5 × 5 = 25)
 
 // Itseisarvo (poista miinusmerkki)
-laatikko c = abs -10
+laatikko c = itseisarvo(-10)
 tulosta laatikko c
 // Tulos: 10
 
 // Satunnaisluku 0:n ja 1:n väliltä
-laatikko d = random
+laatikko d = satunnainen()
 tulosta Sait: laatikko d
 ```
 
@@ -317,7 +317,7 @@ Muunna lämpötiloja Fahrenheitista Celsiuksiksi!
 (Vihje: Celsius = (Fahrenheit - 32) × 5 / 9)
 
 ### 3. 🎲 Nopanheittäjä
-Käytä `random`-komentoa nopanheiton simulointiin!
+Käytä `satunnainen()`-funktiota nopanheiton simulointiin!
 
 ### 4. 📊 Arvosanalaskuri
 Kysy koetuloksia ja laske keskiarvo!

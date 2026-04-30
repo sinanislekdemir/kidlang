@@ -18,8 +18,8 @@ if box question > 10 then
 end
 
 // Generate random numbers
-box a = random % 20 + 1
-box b = random % 20 + 1
+box a = random() % 20 + 1
+box b = random() % 20 + 1
 box correct = box a + box b
 
 print

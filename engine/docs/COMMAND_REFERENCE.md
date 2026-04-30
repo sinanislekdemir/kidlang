@@ -94,9 +94,8 @@ value = stack stack_name[key]
 
 **Index styles:**
 ```kidlang
-// Both [] and () work the same
 stack items[1] = apple
-stack items(2) = banana
+stack items[2] = banana
 
 // Can use numbers or words as keys
 stack data[1] = first
@@ -145,6 +144,39 @@ file file_handle
 ```kidlang
 file mydata
 ```
+
+### Function
+
+Define a reusable block that can return a value.
+
+**Syntax:**
+```kidlang
+function function_name(box arg1, box arg2)
+return expression
+end
+```
+
+**Examples:**
+```kidlang
+function add(box a, box b)
+box a + box b
+end
+
+function decorate(box name)
+box result = upper(box name)
+return Hello, box result
+end
+
+box total = add(4, 5)
+print box total
+print decorate(kidlang)
+```
+
+**Notes:**
+- Use `function ... end` blocks.
+- `return` is optional.
+- Without `return`, the last evaluated expression becomes the return value.
+- Builtin functions use the same call syntax, such as `sqrt(16)` and `len(box name)`.
 
 ---
 
@@ -258,39 +290,39 @@ box remainder = box a % box b    // 1
 
 **Square Root:**
 ```kidlang
-print sqrt 16        // 4
-box result = sqrt 25 // 5
+print sqrt(16)        // 4
+box result = sqrt(25) // 5
 ```
 
 **Absolute Value:**
 ```kidlang
-print abs -15        // 15
-box result = abs -7  // 7
+print abs(-15)        // 15
+box result = abs(-7)  // 7
 ```
 
 **Square:**
 ```kidlang
-print sqr 5          // 25
-box result = sqr 8   // 64
+print sqr(5)          // 25
+box result = sqr(8)   // 64
 ```
 
 **Trigonometry:**
 ```kidlang
-print sin 1.57       // ~1 (sin of π/2)
-print cos 0          // 1
-print tan 0.785      // ~1 (tan of π/4)
+print sin(1.57)       // ~1 (sin of π/2)
+print cos(0)          // 1
+print tan(0.785)      // ~1 (tan of π/4)
 ```
 
 **Logarithm:**
 ```kidlang
-print log 2.718      // ~1 (natural log of e)
-box result = log 10
+print log(2.718)      // ~1 (natural log of e)
+box result = log(10)
 ```
 
 **Inverse Trigonometry:**
 ```kidlang
-print asin 0.5       // ~0.524 (30 degrees in radians)
-print acos 0.5       // ~1.047 (60 degrees in radians)
+print asin(0.5)       // ~0.524 (30 degrees in radians)
+print acos(0.5)       // ~1.047 (60 degrees in radians)
 ```
 
 ---
@@ -685,37 +717,37 @@ print GO!
 
 ## Special Values
 
-### random
+### random()
 Get a random integer.
 
 **Examples:**
 ```kidlang
 // Random number
-box num = random
+box num = random()
 print Random: box num
 
 // Random in range 1-10
-box dice = random % 10 + 1
+box dice = random() % 10 + 1
 print Dice roll: box dice
 
 // Random in range 1-100
-box percent = random % 100 + 1
+box percent = random() % 100 + 1
 print Random percent: box percent
 
 // Coin flip
-box coin = random % 2
+box coin = random() % 2
 if box coin = 0 then print Heads
 if box coin = 1 then print Tails
 ```
 
-### now
+### now()
 Get current date and time.
 
 **Example:**
 ```kidlang
-print Current time: now
+print Current time: now()
 
-box timestamp = now
+box timestamp = now()
 print Timestamp: box timestamp
 ```
 
@@ -804,12 +836,13 @@ end:
 |----------|----------|
 | **Variables** | `box`, `stack`, `file` |
 | **I/O** | `print`, `ask` |
-| **Math** | `+`, `-`, `*`, `/`, `%`, `^`, `sqrt`, `abs`, `sqr`, `sin`, `cos`, `tan`, `log` |
+| **Math** | `+`, `-`, `*`, `/`, `%`, `^`, `sqrt()`, `abs()`, `sqr()`, `sin()`, `cos()`, `tan()`, `log()`, `len()`, `lower()`, `upper()`, `min()`, `max()` |
 | **Control** | `if...then...end`, `goto`, `label:` |
 | **Logic** | `and`, `or`, `=`, `!=`, `>`, `<`, `>=`, `<=` |
 | **Files** | `open`, `read`, `readline`, `write`, `seek`, `close` |
 | **System** | `exec`, `sleep` |
-| **Special** | `random`, `now`, `answer`, `\n` |
+| **Functions** | `random()`, `now()`, user-defined `function ... end`, optional `return` |
+| **Special** | `answer`, `\n` |
 
 ---
 
@@ -825,6 +858,8 @@ end:
 | if | eger | jos | wenn |
 | then | ise | niin | dann |
 | end | son | loppu | ende |
+| function | fonksiyon | funktio | funktion |
+| return | don | palauta | rueckgabe |
 | goto | git | mene | geh |
 | and | ve | ja | und |
 | or | veya | tai | oder |

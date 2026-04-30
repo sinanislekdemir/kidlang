@@ -112,7 +112,7 @@ func TestAssignSpecials(t *testing.T) {
 		{VariableType: TYPE_REFERENCE, String: "BOX_2"},
 		{VariableType: TYPE_INTEGER, Integer: 5, Float: 0, String: ""},
 		{VariableType: TYPE_STRING, Integer: 0, Float: 0, String: "+"},
-		{VariableType: TYPE_STRING, Integer: 0, Float: 0, String: "RANDOM"},
+		{VariableType: TYPE_CALL, Integer: 0, Float: 0, String: "RANDOM()"},
 	}
 	err := Assign(memory, stack, arguments)
 	if err != nil {

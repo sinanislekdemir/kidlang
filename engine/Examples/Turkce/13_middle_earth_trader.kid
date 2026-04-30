@@ -2,6 +2,41 @@ TR
 // Orta Dünya Tüccarı - Bir ticaret macerası
 // Ucuza al, pahalıya sat ve 1000 altın kazan!
 
+fonksiyon pazar_fiyati(kutu taban, kutu aralik)
+rastgele() % kutu aralik + kutu taban
+son
+
+fonksiyon toplam_fiyat(kutu fiyat, kutu miktar)
+kutu fiyat * kutu miktar
+son
+
+fonksiyon zirh_alani(kutu miktar)
+kutu miktar * 2
+son
+
+fonksiyon bos_alan(kutu canta, kutu dolu)
+kutu canta - kutu dolu
+son
+
+fonksiyon guvenli_haydut_altini(kutu altin)
+eger kutu altin > 30 ise
+   don kutu altin - 30
+son
+0
+son
+
+fonksiyon tuccar_unvani(kutu altin)
+eger kutu altin >= 1000 ise
+   don Usta Tuccar
+son
+
+eger kutu altin >= 500 ise
+   don Guclu Tuccar
+son
+
+Ogrenen Tuccar
+son
+
 yaz ====================================
 yaz   ORTA DUNYA TUCCARI
 yaz ====================================
@@ -23,12 +58,13 @@ yaz
 yaz === GUN kutu gun of 30 ===
 yaz Altın: kutu altin
 yaz Çanta: kutu dolu of kutu canta alan
+yaz Bos alan: bos_alan(kutu canta, kutu dolu)
 yaz Envanter iksir: kutu iksir | Asa: kutu asa | Zırh: kutu zirh
 yaz
 
-kutu i_fiyat = rastgele % 30 + 20
-kutu a_fiyat = rastgele % 50 + 40  
-kutu z_fiyat = rastgele % 80 + 60
+kutu i_fiyat = pazar_fiyati(20, 30)
+kutu a_fiyat = pazar_fiyati(40, 50)  
+kutu z_fiyat = pazar_fiyati(60, 80)
 
 yaz === PAZAR FIYATLARI ===
 yaz İksir: kutu i_fiyat altın
@@ -61,7 +97,7 @@ git basla
 iksir_al:
 sor Kaç iksir?
 kutu miktar = cevap
-kutu maliyet = kutu i_fiyat * kutu miktar
+kutu maliyet = toplam_fiyat(kutu i_fiyat, kutu miktar)
 kutu gerek = kutu dolu + kutu miktar
 eger kutu maliyet > kutu altin ise
    yaz Yeterli altın yok!
@@ -83,7 +119,7 @@ git basla
 asa_al:
 sor Kaç asa?
 kutu miktar = cevap
-kutu maliyet = kutu a_fiyat * kutu miktar
+kutu maliyet = toplam_fiyat(kutu a_fiyat, kutu miktar)
 kutu gerek = kutu dolu + kutu miktar
 eger kutu maliyet > kutu altin ise
    yaz Yeterli altın yok!
@@ -105,8 +141,8 @@ git basla
 zirh_al:
 sor Kaç zırh?
 kutu miktar = cevap
-kutu maliyet = kutu z_fiyat * kutu miktar
-kutu gerek = kutu dolu + kutu miktar * 2
+kutu maliyet = toplam_fiyat(kutu z_fiyat, kutu miktar)
+kutu gerek = kutu dolu + zirh_alani(kutu miktar)
 eger kutu maliyet > kutu altin ise
    yaz Yeterli altın yok!
    bekle 1000
@@ -119,7 +155,7 @@ eger kutu gerek > kutu canta ise
 son
 kutu altin = kutu altin - kutu maliyet
 kutu zirh = kutu zirh + kutu miktar
-kutu dolu = kutu dolu + kutu miktar * 2
+kutu dolu = kutu dolu + zirh_alani(kutu miktar)
 yaz kutu miktar zırh alındı! kutu maliyet altın ödendi!
 bekle 1000
 git basla
@@ -132,7 +168,7 @@ eger kutu miktar > kutu iksir ise
    bekle 1000
    git basla
 son
-kutu kazanc = kutu i_fiyat * kutu miktar
+kutu kazanc = toplam_fiyat(kutu i_fiyat, kutu miktar)
 kutu altin = kutu altin + kutu kazanc
 kutu iksir = kutu iksir - kutu miktar
 kutu dolu = kutu dolu - kutu miktar
@@ -148,7 +184,7 @@ eger kutu miktar > kutu asa ise
    bekle 1000
    git basla
 son
-kutu kazanc = kutu a_fiyat * kutu miktar
+kutu kazanc = toplam_fiyat(kutu a_fiyat, kutu miktar)
 kutu altin = kutu altin + kutu kazanc
 kutu asa = kutu asa - kutu miktar
 kutu dolu = kutu dolu - kutu miktar
@@ -164,10 +200,10 @@ eger kutu miktar > kutu zirh ise
    bekle 1000
    git basla
 son
-kutu kazanc = kutu z_fiyat * kutu miktar
+kutu kazanc = toplam_fiyat(kutu z_fiyat, kutu miktar)
 kutu altin = kutu altin + kutu kazanc
 kutu zirh = kutu zirh - kutu miktar
-kutu dolu = kutu dolu - kutu miktar * 2
+kutu dolu = kutu dolu - zirh_alani(kutu miktar)
 yaz kutu miktar zırh satıldı! kutu kazanc altın kazanıldı!
 bekle 1000
 git basla
@@ -178,7 +214,7 @@ yaz Sonraki şehre seyahat ediliyor...
 bekle 1000
 kutu gun = kutu gun + 1
 
-kutu olay = rastgele % 8
+kutu olay = rastgele() % 8
 
 eger kutu olay = 0 ise
    yaz Dostane bir büyücü sana 50 altın verdi! ✨
@@ -188,12 +224,7 @@ son
 
 eger kutu olay = 1 ise
    yaz Haydutlar saldırdı! 30 altın kaybedildi! ⚔️
-   eger kutu altin > 30 ise
-      kutu altin = kutu altin - 30
-   son
-   eger kutu altin <= 30 ise
-      kutu altin = 0
-   son
+   kutu altin = guvenli_haydut_altini(kutu altin)
    bekle 1500
 son
 
@@ -217,7 +248,8 @@ yaz ====================================
 yaz   TEBRİKLER!
 yaz ====================================
 yaz kutu gun günde 1000 altın kazandın!
-yaz Usta Tüccarsın! 🏆
+yaz Unvan: tuccar_unvani(kutu altin)
+yaz Sonraki pazar icin hazirsin! 🏆
 yaz
 git son
 
@@ -228,6 +260,7 @@ yaz   SÜRE BİTTİ!
 yaz ====================================
 yaz 30 gün geçti...
 yaz Son altın: kutu altin
+yaz Unvan: kutu tuccar_unvani(kutu altin)
 yaz
 eger kutu altin >= 500 ise
    yaz Bir tüccar için fena değil!

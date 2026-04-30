@@ -22,26 +22,32 @@ type KLStatement struct {
 }
 
 type Program struct {
-	StackTrace  []int         `json:"stack_trace"` // Executed statement indexes
-	Stack       KLStack       `json:"stack"`
-	Memory      KLMemory      `json:"memory"`
-	Breakpoints []int         `json:"breakpoints"`
-	Mode        int           `json:"program_mode"`
-	Statements  []KLStatement `json:"statements"`
-	Debug       bool          `json:"debug"`
+	StackTrace      []int                 `json:"stack_trace"` // Executed statement indexes
+	Stack           KLStack               `json:"stack"`
+	Memory          KLMemory              `json:"memory"`
+	Breakpoints     []int                 `json:"breakpoints"`
+	Mode            int                   `json:"program_mode"`
+	Statements      []KLStatement         `json:"statements"`
+	Functions       map[string]KLFunction `json:"functions"`
+	Debug           bool                  `json:"debug"`
+	currentFunction *KLFunction
+	functionIfDepth int
 }
 
 func (p *Program) RegisterStdlib() {
 	p.Statements = make([]KLStatement, 0)
+	p.Functions = make(map[string]KLFunction)
 }
 
 func (p *Program) Init() {
+	activeLanguage = LANG_EN
 	p.StackTrace = make([]int, 0)
-	p.Stack = KLStack{Cursor: 0, Error: nil, JumpLabel: nil}
+	p.Stack = KLStack{Cursor: 0, Error: nil, JumpLabel: nil, Program: p}
 	p.Memory = make(KLMemory)
 	p.Breakpoints = make([]int, 0)
 	p.Mode = PROG_CLI
 	p.Statements = make([]KLStatement, 0)
+	p.Functions = make(map[string]KLFunction)
 	p.Memory[ADDRESS_LANGUAGE] = VariableBox{
 		VariableType: TYPE_STRING,
 	}
@@ -53,6 +59,64 @@ func (p *Program) Init() {
 
 func (p *Program) SetLanguage(lang string) {
 	activeLanguage = lang
+}
+
+func (p *Program) appendStatement(statement KLStatement) {
+	if p.currentFunction != nil {
+		p.currentFunction.Statements = append(p.currentFunction.Statements, statement)
+		return
+	}
+	p.Statements = append(p.Statements, statement)
+}
+
+func (p *Program) parseFunctionDeclaration(tokens []string, lineNumber int) (bool, error) {
+	functionKeyword := getTranslation(FUNCTION)
+	if !strings.EqualFold(tokens[0], functionKeyword) {
+		return false, nil
+	}
+	if p.currentFunction != nil {
+		return false, fmt.Errorf("nested function declarations are not allowed")
+	}
+	if len(tokens) < 2 {
+		return false, fmt.Errorf("function declaration requires a name")
+	}
+
+	signatureText := strings.Join(tokens[1:], " ")
+	call, ok := parseFunctionCall(signatureText)
+	if !ok {
+		return false, fmt.Errorf("invalid function declaration")
+	}
+	if isReservedKeyword(call.Name) {
+		return false, fmt.Errorf("function name %s is reserved", call.Name)
+	}
+	if findBuiltinFunction(call.Name) != nil {
+		return false, fmt.Errorf("function name %s is reserved for a builtin", call.Name)
+	}
+	if _, exists := p.Functions[strings.ToUpper(call.Name)]; exists {
+		return false, fmt.Errorf("function %s already exists", call.Name)
+	}
+
+	parameters := make([]FunctionParameter, 0, len(call.Arguments))
+	boxKeyword := getTranslation(BOX)
+	for _, rawParameter := range call.Arguments {
+		parameterTokens := tokenizer(rawParameter)
+		if len(parameterTokens) != 2 || !strings.EqualFold(parameterTokens[0], boxKeyword) {
+			return false, fmt.Errorf("function parameters must use box declarations")
+		}
+		parameters = append(parameters, FunctionParameter{
+			Name:       parameterTokens[1],
+			BindingKey: strings.ToUpper(parameterTokens[0] + " " + parameterTokens[1]),
+		})
+	}
+
+	p.currentFunction = &KLFunction{
+		Name:       call.Name,
+		Parameters: parameters,
+		Statements: make([]KLStatement, 0),
+	}
+	p.functionIfDepth = 0
+	_ = lineNumber
+	return true, nil
 }
 
 func (p *Program) parseAssignment(tokens []string, lineNumber int) (bool, error) {
@@ -133,7 +197,7 @@ func (p *Program) parseAssignment(tokens []string, lineNumber int) (bool, error)
 
 	rightArgs := stringsToArguments(p.Memory, tokens[equalPos+1:])
 	arguments = append(arguments, rightArgs...)
-	p.Statements = append(p.Statements, KLStatement{
+	p.appendStatement(KLStatement{
 		Type:            ST_ASSIGNMENT,
 		CommandFunction: Assign,
 		FullLine:        strings.Join(tokens, " "),
@@ -179,20 +243,23 @@ func (p *Program) parseIfThen(tokens []string, lineNumber int) (bool, error) {
 		})
 	}
 
-	p.Statements = append(p.Statements, KLStatement{
+	p.appendStatement(KLStatement{
 		Type:            ST_CONDITION,
 		CommandFunction: If,
 		FullLine:        strings.Join(tokens, " "),
 		LineNumber:      lineNumber,
 		Arguments:       arguments,
 	})
+	if p.currentFunction != nil {
+		p.functionIfDepth++
+	}
 	return true, nil
 }
 
 func (p *Program) parseLabel(tokens []string, line string, lineNumber int) bool {
 	// Check if this is a label
 	if len(tokens) == 1 && line[len(line)-1] == ':' {
-		p.Statements = append(p.Statements, KLStatement{
+		p.appendStatement(KLStatement{
 			Type:     ST_LABEL,
 			FullLine: line,
 			Arguments: []VariableBox{
@@ -212,12 +279,20 @@ func (p *Program) parseLabel(tokens []string, line string, lineNumber int) bool 
 func (p *Program) parseEndOfScope(line string, lineNumber int) bool {
 	endName := getTranslation(END)
 	if strings.ToUpper(line) == endName {
-		p.Statements = append(p.Statements, KLStatement{
+		if p.currentFunction != nil && p.functionIfDepth == 0 {
+			p.Functions[strings.ToUpper(p.currentFunction.Name)] = *p.currentFunction
+			p.currentFunction = nil
+			return true
+		}
+		p.appendStatement(KLStatement{
 			Type:       ST_SCOPE_END,
 			FullLine:   line,
 			LineNumber: lineNumber,
 			Arguments:  []VariableBox{},
 		})
+		if p.currentFunction != nil && p.functionIfDepth > 0 {
+			p.functionIfDepth--
+		}
 		return true
 	}
 	return false
@@ -257,7 +332,7 @@ func (p *Program) parseCommand(tokens []string, lineNumber int) (bool, error) {
 			}
 
 			arguments := stringsToArguments(p.Memory, tokens[1:])
-			p.Statements = append(p.Statements, KLStatement{
+			p.appendStatement(KLStatement{
 				Type:            StatementType(cmd.Type),
 				FullLine:        strings.Join(tokens, " "),
 				CommandFunction: cmd.CommandFunction,
@@ -268,6 +343,69 @@ func (p *Program) parseCommand(tokens []string, lineNumber int) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+func (p *Program) parseReturnStatement(tokens []string, lineNumber int) (bool, error) {
+	returnKeyword := getTranslation(RETURN)
+	if !strings.EqualFold(tokens[0], returnKeyword) {
+		return false, nil
+	}
+	if p.currentFunction == nil {
+		return false, fmt.Errorf("return can only be used inside functions")
+	}
+
+	p.appendStatement(KLStatement{
+		Type:       ST_RETURN,
+		FullLine:   strings.Join(tokens, " "),
+		LineNumber: lineNumber,
+		Arguments:  stringsToArguments(p.Memory, tokens[1:]),
+	})
+	return true, nil
+}
+
+func (p *Program) parseExpressionStatement(tokens []string, line string, lineNumber int) {
+	p.appendStatement(KLStatement{
+		Type:       ST_EXPRESSION,
+		FullLine:   line,
+		LineNumber: lineNumber,
+		Arguments:  stringsToArguments(p.Memory, tokens),
+	})
+}
+
+func (p *Program) parseStackDeclaration(tokens []string) bool {
+	stackName := getTranslation("STACK")
+	if len(tokens) == 2 && strings.ToUpper(tokens[0]) == stackName {
+		justName := tokens[1]
+		if p.currentFunction == nil {
+			p.Memory[strings.ToUpper(justName)] = NewStack()
+		}
+		return true
+	}
+	return false
+}
+
+func (p *Program) parseFunctionBodyLine(line string, tokens []string, newLine string, lineNumber int) error {
+	if pass, err := p.parseReturnStatement(tokens, lineNumber); err != nil || pass {
+		return err
+	}
+	if pass, err := p.parseIfThen(tokens, lineNumber); err != nil || pass {
+		return err
+	}
+	if pass, err := p.parseCommand(tokens, lineNumber); err != nil || pass {
+		return err
+	}
+	if pass, err := p.parseAssignment(tokens, lineNumber); err != nil || pass {
+		return err
+	}
+	if pass := p.parseLabel(tokens, line, lineNumber); pass {
+		return nil
+	}
+	if pass := p.parseEndOfScope(newLine, lineNumber); pass {
+		return nil
+	}
+
+	p.parseExpressionStatement(tokens, line, lineNumber)
+	return nil
 }
 
 // ParseLine to process a single programming line
@@ -286,6 +424,10 @@ func (p *Program) ParseLine(line string, lineNumber int) error {
 	}
 	// Check if this is a language change
 	langUpper := strings.ToUpper(line)
+	if langUpper == "EN" {
+		activeLanguage = LANG_EN
+		return nil
+	}
 	if langUpper == "TR" {
 		activeLanguage = LANG_TR
 		return nil
@@ -299,16 +441,25 @@ func (p *Program) ParseLine(line string, lineNumber int) error {
 		return nil
 	}
 	tokens := tokenizer(line)
+	if len(tokens) == 0 {
+		return nil
+	}
 
 	// We will no longer use the line, instead we will use the cleaned newLine
 	newLine := strings.Join(tokens, " ")
 
+	if p.currentFunction == nil {
+		if pass, err := p.parseFunctionDeclaration(tokens, lineNumber); err != nil || pass {
+			return err
+		}
+	}
+
+	if p.currentFunction != nil {
+		return p.parseFunctionBodyLine(line, tokens, newLine, lineNumber)
+	}
+
 	// Check for "stack name" declaration (before other parsing)
-	stackName := getTranslation("STACK")
-	if len(tokens) == 2 && strings.ToUpper(tokens[0]) == stackName {
-		// This is a stack declaration: stack name
-		justName := tokens[1]
-		p.Memory[strings.ToUpper(justName)] = NewStack()
+	if p.parseStackDeclaration(tokens) {
 		return nil
 	}
 
@@ -337,7 +488,7 @@ func (p *Program) ParseLine(line string, lineNumber int) error {
 	arguments := stringsToArguments(p.Memory, tokens)
 
 	// No match, consider this a print statement
-	p.Statements = append(p.Statements, KLStatement{
+	p.appendStatement(KLStatement{
 		Type:            ST_COMMAND,
 		CommandFunction: Print,
 		FullLine:        line,
@@ -376,6 +527,9 @@ func (p *Program) Load(filename string) error {
 		}
 		lineNumber++
 	}
+	if p.currentFunction != nil {
+		return fmt.Errorf("function %s is missing END", p.currentFunction.Name)
+	}
 	return nil
 }
 
@@ -390,28 +544,19 @@ func (p *Program) LoadFromString(programText string) error {
 			}
 		}
 	}
+	if p.currentFunction != nil {
+		return fmt.Errorf("function %s is missing END", p.currentFunction.Name)
+	}
 	return nil
 }
 
 func (p *Program) findNextEnd() error {
-	depth := 0
-	for i := p.Stack.Cursor + 1; i < len(p.Statements); i++ {
-		if p.Debug {
-			fmt.Printf("Finding exit: Cursor: %d, Line: %d, Statement: %s\n", i, p.Statements[i].LineNumber, p.Statements[i].FullLine)
-		}
-		if p.Statements[i].Type == ST_CONDITION {
-			depth++
-		}
-		if p.Statements[i].Type == ST_SCOPE_END {
-			if depth == 0 {
-				p.Stack.Cursor = i
-				return nil
-			} else {
-				depth--
-			}
-		}
+	nextEnd, err := findNextScopeEnd(p.Statements, p.Stack.Cursor)
+	if err != nil {
+		return err
 	}
-	return fmt.Errorf("no matching END found for conditional statement")
+	p.Stack.Cursor = nextEnd
+	return nil
 }
 
 func (p *Program) Run() error {
@@ -444,14 +589,13 @@ func (p *Program) Cleanup() {
 }
 
 func (p *Program) Jump() error {
-	for i, s := range p.Statements {
-		if s.Type == ST_LABEL && strings.EqualFold(s.Arguments[0].String, *p.Stack.JumpLabel) {
-			p.Stack.Cursor = i
-			p.Stack.JumpLabel = nil
-			return nil
-		}
+	labelIndex, err := findLabelIndex(p.Statements, *p.Stack.JumpLabel)
+	if err != nil {
+		return err
 	}
-	return fmt.Errorf("label not found: %s", *p.Stack.JumpLabel)
+	p.Stack.Cursor = labelIndex
+	p.Stack.JumpLabel = nil
+	return nil
 }
 
 func (p *Program) Step() error {

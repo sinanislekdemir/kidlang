@@ -32,7 +32,7 @@ print ================================
 print
 
 // Generate random story variation
-box variation = random % 3
+box variation = random() % 3
 
 if box variation = 0 then goto story1
 if box variation = 1 then goto story2

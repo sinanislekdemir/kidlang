@@ -23,10 +23,10 @@ kiste name = kiste andere
 ### Liste (Wörterbuch/Map)
 ```
 liste spielzeuge
-liste spielzeuge[1] = auto     // oder spielzeuge(1) = auto
-liste spielzeuge[2] = ball     // oder spielzeuge(2) = ball
-spielzeuge[1] = lastwagen      // oder spielzeuge(1) = lastwagen
-schreib spielzeuge[1]          // oder schreib spielzeuge(1)
+liste spielzeuge[1] = auto
+liste spielzeuge[2] = ball
+spielzeuge[1] = lastwagen
+schreib spielzeuge[1]
 ```
 
 ### Datei
@@ -67,12 +67,12 @@ kiste ergebnis = 2 ^ 3  // XOR für Zahlen, Verschlüsselung für Strings
 wurzel 16     // Quadratwurzel
 betrag -5     // Absolutwert
 quadrat 4     // Quadrat (4*4)
-sin 1.57      // Sinus
-cos 0         // Kosinus
-tan 0.785     // Tangens
-log 2.718     // Natürlicher Logarithmus
-asin 0.5      // Arkussinus
-acos 0.5      // Arkuskosinus
+sin(1.57)     // Sinus
+cos(0)        // Kosinus
+tan(0.785)    // Tangens
+log(2.718)    // Natürlicher Logarithmus
+asin(0.5)     // Arkussinus
+acos(0.5)     // Arkuskosinus
 ```
 
 ## String-Operationen

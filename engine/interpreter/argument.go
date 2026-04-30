@@ -2,19 +2,15 @@ package interpreter
 
 import (
 	"fmt"
-	"math"
-	"math/rand"
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 )
 
-// parseStackIndex extracts stack name and index from "name[index]" or "name(index)"
+// parseStackIndex extracts stack name and index from "name[index]".
 // Returns: stackName, index, isStack
 func parseStackIndex(text string) (string, string, bool) {
-	// Match pattern: name[index] or name(index)
-	re := regexp.MustCompile(`^(.+?)[\[\(](.+?)[\]\)]$`)
+	re := regexp.MustCompile(`^(.+?)\[(.+?)\]$`)
 	matches := re.FindStringSubmatch(text)
 	if len(matches) == 3 {
 		return strings.TrimSpace(matches[1]), strings.TrimSpace(matches[2]), true
@@ -22,179 +18,20 @@ func parseStackIndex(text string) (string, string, bool) {
 	return "", "", false
 }
 
-// getNumberArgument handles getting a number argument that might be split by +/- sign
-// Returns the float value and number of tokens consumed (1 or 2)
-func getNumberArgument(arguments []VariableBox, index int) (float64, int, bool) {
-	if index >= len(arguments) {
-		return 0, 0, false
-	}
-
-	arg := arguments[index]
-
-	// Direct number
-	if arg.VariableType == TYPE_INTEGER || arg.VariableType == TYPE_FLOAT {
-		return arg.ToFloat(), 1, true
-	}
-
-	// Sign followed by number (e.g., "- 5")
-	if (arg.String == "-" || arg.String == "+") && index+1 < len(arguments) {
-		nextArg := arguments[index+1]
-		if nextArg.VariableType == TYPE_INTEGER || nextArg.VariableType == TYPE_FLOAT {
-			val := nextArg.ToFloat()
-			if arg.String == "-" {
-				val = -val
-			}
-			return val, 2, true
-		}
-	}
-
-	return 0, 0, false
-}
-
-// EvaluateInlineFunctions evaluates the inline functions in the arguments.
-// Does not overwrite the original arguments.
-func evaluateInlineFunctions(arguments []VariableBox) []VariableBox {
+func evaluateFunctionCalls(memory KLMemory, stack *KLStack, arguments []VariableBox) ([]VariableBox, error) {
 	result := make([]VariableBox, 0, len(arguments))
-	for index := 0; index < len(arguments); index++ {
-		if arguments[index].VariableType != TYPE_STRING {
-			result = append(result, arguments[index])
+	for _, argument := range arguments {
+		if argument.VariableType != TYPE_CALL {
+			result = append(result, argument)
 			continue
 		}
-		if strings.EqualFold(arguments[index].String, getTranslation("RANDOM")) {
-			result = append(result, VariableBox{
-				VariableType: TYPE_INTEGER,
-				Integer:      rand.Int63(),
-			})
-			continue
+		value, err := evaluateFunctionCall(memory, stack, argument.String)
+		if err != nil {
+			return nil, err
 		}
-		if strings.EqualFold(arguments[index].String, getTranslation("NOW")) {
-			now := time.Now()
-			result = append(result, VariableBox{
-				VariableType: TYPE_STRING,
-				String:       now.Format("Monday, January 2, 2006 15:03:05"),
-			})
-			continue
-		}
-		if strings.EqualFold(arguments[index].String, getTranslation("SQRT")) {
-			if val, consumed, ok := getNumberArgument(arguments, index+1); ok {
-				res := math.Sqrt(val)
-				result = append(result, VariableBox{
-					VariableType: TYPE_FLOAT,
-					Float:        res,
-				})
-				index += consumed
-				continue
-			}
-			result = append(result, arguments[index])
-			continue
-		}
-		if strings.EqualFold(arguments[index].String, getTranslation("ABS")) {
-			if val, consumed, ok := getNumberArgument(arguments, index+1); ok {
-				res := math.Abs(val)
-				result = append(result, VariableBox{
-					VariableType: TYPE_FLOAT,
-					Float:        res,
-				})
-				index += consumed
-				continue
-			}
-			result = append(result, arguments[index])
-			continue
-		}
-		if strings.EqualFold(arguments[index].String, getTranslation("SQR")) {
-			if val, consumed, ok := getNumberArgument(arguments, index+1); ok {
-				res := val * val
-				result = append(result, VariableBox{
-					VariableType: TYPE_FLOAT,
-					Float:        res,
-				})
-				index += consumed
-				continue
-			}
-			result = append(result, arguments[index])
-			continue
-		}
-		if strings.EqualFold(arguments[index].String, "SIN") {
-			if val, consumed, ok := getNumberArgument(arguments, index+1); ok {
-				res := math.Sin(val)
-				result = append(result, VariableBox{
-					VariableType: TYPE_FLOAT,
-					Float:        res,
-				})
-				index += consumed
-				continue
-			}
-			result = append(result, arguments[index])
-			continue
-		}
-		if strings.EqualFold(arguments[index].String, "COS") {
-			if val, consumed, ok := getNumberArgument(arguments, index+1); ok {
-				res := math.Cos(val)
-				result = append(result, VariableBox{
-					VariableType: TYPE_FLOAT,
-					Float:        res,
-				})
-				index += consumed
-				continue
-			}
-			result = append(result, arguments[index])
-			continue
-		}
-		if strings.EqualFold(arguments[index].String, "TAN") {
-			if val, consumed, ok := getNumberArgument(arguments, index+1); ok {
-				res := math.Tan(val)
-				result = append(result, VariableBox{
-					VariableType: TYPE_FLOAT,
-					Float:        res,
-				})
-				index += consumed
-				continue
-			}
-			result = append(result, arguments[index])
-			continue
-		}
-		if strings.EqualFold(arguments[index].String, "LOG") {
-			if val, consumed, ok := getNumberArgument(arguments, index+1); ok {
-				res := math.Log(val)
-				result = append(result, VariableBox{
-					VariableType: TYPE_FLOAT,
-					Float:        res,
-				})
-				index += consumed
-				continue
-			}
-			result = append(result, arguments[index])
-			continue
-		}
-		if strings.EqualFold(arguments[index].String, "ASIN") {
-			if val, consumed, ok := getNumberArgument(arguments, index+1); ok {
-				res := math.Asin(val)
-				result = append(result, VariableBox{
-					VariableType: TYPE_FLOAT,
-					Float:        res,
-				})
-				index += consumed
-				continue
-			}
-			result = append(result, arguments[index])
-			continue
-		}
-		if strings.EqualFold(arguments[index].String, "ACOS") {
-			if val, consumed, ok := getNumberArgument(arguments, index+1); ok {
-				res := math.Acos(val)
-				result = append(result, VariableBox{
-					VariableType: TYPE_FLOAT,
-					Float:        res,
-				})
-				index += consumed
-				continue
-			}
-			result = append(result, arguments[index])
-			continue
-		}
-		result = append(result, arguments[index])
+		result = append(result, value)
 	}
-	return result
+	return result, nil
 }
 
 func evaluateMulDiv(arguments []VariableBox) ([]VariableBox, error) {
@@ -321,12 +158,12 @@ func evalSumSubModXor(arguments []VariableBox) ([]VariableBox, error) {
 // Returns:
 // - A slice of VariableBox containing the processed and evaluated arguments.
 // - An error if any step in the processing or evaluation fails.
-func processArguments(memory KLMemory, arguments []VariableBox) ([]VariableBox, error) {
-	processedArguments, err := prepareArguments(memory, arguments)
+func processArguments(memory KLMemory, stack *KLStack, arguments []VariableBox) ([]VariableBox, error) {
+	processedArguments, err := prepareArguments(memory, stack, arguments)
 	if err != nil {
 		return nil, err
 	}
-	processedArguments, err = evalMathematicalOperations(processedArguments)
+	processedArguments, err = evalMathematicalOperations(memory, stack, processedArguments)
 	if err != nil {
 		return nil, err
 	}
@@ -366,9 +203,12 @@ func stringifyArguments(arguments []VariableBox) []VariableBox {
 	return filtered
 }
 
-func evalMathematicalOperations(arguments []VariableBox) ([]VariableBox, error) {
-	afterInlines := evaluateInlineFunctions(arguments)
-	afterMulDiv, err := evaluateMulDiv(afterInlines)
+func evalMathematicalOperations(memory KLMemory, stack *KLStack, arguments []VariableBox) ([]VariableBox, error) {
+	afterCalls, err := evaluateFunctionCalls(memory, stack, arguments)
+	if err != nil {
+		return nil, err
+	}
+	afterMulDiv, err := evaluateMulDiv(afterCalls)
 	if err != nil {
 		return nil, err
 	}
@@ -387,7 +227,7 @@ func evalMathematicalOperations(arguments []VariableBox) ([]VariableBox, error) 
 // Important: This function does not modify the original arguments as it's possible to run the same statement multiple times.
 //
 //	Consider goto. If you have a goto statement, you can run the same statement multiple times.
-func prepareArguments(memory KLMemory, arguments []VariableBox) ([]VariableBox, error) {
+func prepareArguments(memory KLMemory, stack *KLStack, arguments []VariableBox) ([]VariableBox, error) {
 	result := make([]VariableBox, len(arguments))
 	boxName := getTranslation(BOX)
 	fileName := getTranslation(FILE)
@@ -438,6 +278,12 @@ OUTER:
 			result[index].Integer = value.Integer
 			result[index].String = value.String
 			result[index].Float = value.Float
+		case TYPE_CALL:
+			value, err := evaluateFunctionCall(memory, stack, arguments[index].String)
+			if err != nil {
+				return nil, err
+			}
+			result[index] = value
 		case TYPE_STRING:
 			answerKw := ADDRESS_ANSWER
 
@@ -499,44 +345,30 @@ func stringsToArguments(memory KLMemory, args []string) []VariableBox {
 			continue
 		}
 
-		// Check for "stack X[index]" or "stack X(index)" patterns
+		if call, ok := parseFunctionCall(argument); ok {
+			result = append(result, VariableBox{
+				VariableType: TYPE_CALL,
+				String:       call.Name + "(" + strings.Join(call.Arguments, ", ") + ")",
+			})
+			continue
+		}
+
+		// Check for "stack X[index]" patterns
 		if i+1 < len(args) && strings.ToUpper(argument) == stackName {
-			// Next token might have indexing
 			nextToken := args[i+1]
 			_, _, isIndexed := parseStackIndex(nextToken)
 
 			if isIndexed {
-				// This is stack varname[index]
-				// Return as a REFERENCE that will be resolved at execution time
-				// Format: "stack name[index]" as a reference
 				result = append(result, VariableBox{
 					VariableType: TYPE_REFERENCE,
-					String:       argument + " " + nextToken, // Keep full "stack toys[1]" format
+					String:       argument + " " + nextToken,
 				})
-				i++ // Skip next token
+				i++
 				continue
-			}
-
-			// Check if next next token has indexing (e.g., "stack toys (3)" where (3) is separate)
-			if i+2 < len(args) {
-				thirdToken := args[i+2]
-				// Check if this looks like an index: starts and ends with brackets
-				if (strings.HasPrefix(thirdToken, "(") || strings.HasPrefix(thirdToken, "[")) &&
-					(strings.HasSuffix(thirdToken, ")") || strings.HasSuffix(thirdToken, "]")) {
-					// Combine as "stack toys(3)"
-					result = append(result, VariableBox{
-						VariableType: TYPE_REFERENCE,
-						String:       argument + " " + nextToken + thirdToken,
-					})
-					i += 2 // Skip next two tokens
-					continue
-				}
 			}
 
 			// Not indexed or doesn't exist, treat as "stack name" reference
 			combinedName := argument + " " + args[i+1]
-			// For stacks, always keep as reference (don't resolve to value)
-			// This allows commands like READ and WRITE to detect stack targets
 			if strings.ToUpper(argument) == stackName {
 				result = append(result, VariableBox{
 					VariableType: TYPE_REFERENCE,
@@ -565,15 +397,14 @@ func stringsToArguments(memory KLMemory, args []string) []VariableBox {
 			combinedName := argument + " " + args[i+1]
 			if val, exists := memory[strings.ToUpper(combinedName)]; exists {
 				result = append(result, val)
-				i++ // Skip next token as it's part of the variable name
+				i++
 				continue
 			} else {
-				// Variable doesn't exist yet, but store as reference for runtime lookup
 				result = append(result, VariableBox{
 					VariableType: TYPE_REFERENCE,
 					String:       combinedName,
 				})
-				i++ // Skip next token
+				i++
 				continue
 			}
 		}

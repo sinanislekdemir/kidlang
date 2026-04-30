@@ -23,10 +23,10 @@ kutu isim = kutu diger
 ### Liste (sözlük/harita)
 ```
 liste oyuncaklar
-liste oyuncaklar[1] = araba    // veya oyuncaklar(1) = araba
-liste oyuncaklar[2] = top      // veya oyuncaklar(2) = top
-oyuncaklar[1] = kamyon         // veya oyuncaklar(1) = kamyon
-yaz oyuncaklar[1]              // veya yaz oyuncaklar(1)
+liste oyuncaklar[1] = araba
+liste oyuncaklar[2] = top
+oyuncaklar[1] = kamyon
+yaz oyuncaklar[1]
 ```
 
 ### Dosya
@@ -67,12 +67,12 @@ kutu sonuc = 2 ^ 3  // Sayılar için XOR, metinler için şifreleme
 karekok 16    // Karekök
 mod -5        // Mutlak değer
 kare 4        // Kare (4*4)
-sin 1.57      // Sinüs
-cos 0         // Kosinüs
-tan 0.785     // Tanjant
-log 2.718     // Doğal logaritma
-asin 0.5      // Arksinüs
-acos 0.5      // Arkkosinüs
+sin(1.57)     // Sinüs
+cos(0)        // Kosinüs
+tan(0.785)    // Tanjant
+log(2.718)    // Doğal logaritma
+asin(0.5)     // Arksinüs
+acos(0.5)     // Arkkosinüs
 ```
 
 ## Metin İşlemleri

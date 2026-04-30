@@ -190,6 +190,7 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 			"SQRT": true, "ABS": true, "SQR": true, "SIN": true, "COS": true, "TAN": true,
 			"LOG": true, "ASIN": true, "ACOS": true, "ANSWER": true, "RANDOM": true, "NOW": true,
 			"SEEK": true, "SLEEP": true, "EXEC": true, "ASSIGN": true, "PUT": true, "PORT": true,
+			"FUNCTION": true, "RETURN": true, "LEN": true, "LOWER": true, "UPPER": true, "MIN": true, "MAX": true,
 			"EN": true, "TR": true, "FI": true, "DE": true,
 		},
 
@@ -297,7 +298,8 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 			"OKU": true, "SATIROKU": true, "VE": true, "VEYA": true, "KAREKOK": true,
 			"MOD": true, "KARE": true, "CEVAP": true, "RASTGELE": true, "TARIH": true,
 			"SIRA": true, "BEKLE": true, "CALISTIR": true, "ATAMA": true, "KOY": true,
-			"ICIN": true, "SONRAKI": true, "DEGIL": true,
+			"ICIN": true, "SONRAKI": true, "DEGIL": true, "FONKSIYON": true, "DON": true,
+			"UZUNLUK": true, "KUCUKHARF": true, "BUYUKHARF": true, "MIN": true, "MAX": true,
 			"EN": true, "TR": true, "FI": true, "DE": true,
 		},
 
@@ -405,7 +407,8 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 			"LUE": true, "LUERIVI": true, "JA": true, "TAI": true, "NELIOJUURI": true,
 			"ITSEISARVO": true, "NELIO": true, "VASTAUS": true, "SATUNNAINEN": true, "AIKA": true,
 			"HAE": true, "ODOTA": true, "SUORITA": true, "ASETA": true, "LAITA": true, "PORTTI": true,
-			"VARTEN": true, "SEURAAVA": true, "EI": true,
+			"VARTEN": true, "SEURAAVA": true, "EI": true, "FUNKTIO": true, "PALAUTA": true,
+			"PITUUS": true, "PIENET": true, "ISOT": true, "MIN": true, "MAX": true,
 			"EN": true, "TR": true, "FI": true, "DE": true,
 		},
 
@@ -513,7 +516,8 @@ func createIDETranslations() map[IDELanguage]IDEStrings {
 			"LIES": true, "LIESZEILE": true, "UND": true, "ODER": true, "WURZEL": true,
 			"BETRAG": true, "QUADRAT": true, "ANTWORT": true, "ZUFALL": true, "ZEIT": true,
 			"SUCHE": true, "WARTE": true, "FUEHREAUS": true, "SETZE": true, "TU": true,
-			"FUER": true, "NAECHSTER": true, "NICHT": true,
+			"FUER": true, "NAECHSTER": true, "NICHT": true, "FUNKTION": true, "RUECKGABE": true,
+			"LAENGE": true, "KLEIN": true, "GROSS": true, "MIN": true, "MAX": true,
 			"EN": true, "TR": true, "FI": true, "DE": true,
 		},
 

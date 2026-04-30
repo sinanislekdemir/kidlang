@@ -2,35 +2,6 @@ package interpreter
 
 // Common utility functions shared across platform implementations
 
-// splitPreservingSpaces splits a string into words while preserving spaces
-// Used for syntax highlighting to keep exact spacing
-func splitPreservingSpaces(s string) []string {
-	var result []string
-	var current string
-	inQuote := false
-
-	for _, ch := range s {
-		if ch == '"' {
-			inQuote = !inQuote
-			current += string(ch)
-		} else if ch == ' ' && !inQuote {
-			if current != "" {
-				result = append(result, current)
-				current = ""
-			}
-			result = append(result, " ")
-		} else {
-			current += string(ch)
-		}
-	}
-
-	if current != "" {
-		result = append(result, current)
-	}
-
-	return result
-}
-
 // wrapText wraps text to specified width
 func wrapText(text string, width int) []string {
 	words := []rune(text)

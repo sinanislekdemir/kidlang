@@ -79,7 +79,7 @@ func TestPrepareArgumentsMemoryReference(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			args, err := prepareArguments(tt.args.memory, tt.args.arguments)
+			args, err := prepareArguments(tt.args.memory, nil, tt.args.arguments)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ProcessArguments() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -94,18 +94,18 @@ func TestPrepareArgumentsRandom(t *testing.T) {
 	memory := KLMemory{}
 	arguments := []VariableBox{
 		{
-			VariableType: TYPE_STRING,
-			String:       "RANDOM",
+			VariableType: TYPE_CALL,
+			String:       "RANDOM()",
 		},
 	}
-	args, err := prepareArguments(memory, arguments)
+	args, err := prepareArguments(memory, nil, arguments)
 	if err != nil {
 		t.Errorf("ProcessArguments() error = %v", err)
 	}
 	if args[0].VariableType != TYPE_INTEGER {
 		t.Errorf("ProcessArguments() = %v, want %v", args[0].VariableType, TYPE_INTEGER)
 	}
-	args2, err := prepareArguments(memory, arguments)
+	args2, err := prepareArguments(memory, nil, arguments)
 	if err != nil {
 		t.Errorf("ProcessArguments() error = %v", err)
 	}
@@ -118,11 +118,11 @@ func TestPrepareArgumentsNow(t *testing.T) {
 	memory := KLMemory{}
 	arguments := []VariableBox{
 		{
-			VariableType: TYPE_STRING,
-			String:       "NOW",
+			VariableType: TYPE_CALL,
+			String:       "NOW()",
 		},
 	}
-	args, err := prepareArguments(memory, arguments)
+	args, err := prepareArguments(memory, nil, arguments)
 	if err != nil {
 		t.Errorf("ProcessArguments() error = %v", err)
 	}
@@ -153,7 +153,7 @@ func TestPrepareArgumentsAnswer(t *testing.T) {
 			String:       "ANSWER",
 		},
 	}
-	args, err := prepareArguments(memory, arguments)
+	args, err := prepareArguments(memory, nil, arguments)
 	if err != nil {
 		t.Errorf("ProcessArguments() error = %v", err)
 	}
@@ -227,7 +227,7 @@ func TestStringsToArguments(t *testing.T) {
 		})
 	}
 }
-func TestEvaluateInlineFunctions(t *testing.T) {
+func TestEvaluateFunctionCalls(t *testing.T) {
 	tests := []struct {
 		name      string
 		arguments []VariableBox
@@ -237,8 +237,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test RANDOM",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       getTranslation("RANDOM"),
+					VariableType: TYPE_CALL,
+					String:       getTranslation("RANDOM") + "()",
 				},
 			},
 			want: []VariableBox{
@@ -251,8 +251,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test NOW",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       getTranslation("NOW"),
+					VariableType: TYPE_CALL,
+					String:       getTranslation("NOW") + "()",
 				},
 			},
 			want: []VariableBox{
@@ -265,12 +265,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test SQRT",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       getTranslation("SQRT"),
-				},
-				{
-					VariableType: TYPE_INTEGER,
-					Integer:      16,
+					VariableType: TYPE_CALL,
+					String:       getTranslation("SQRT") + "(16)",
 				},
 			},
 			want: []VariableBox{
@@ -284,12 +280,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test ABS",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       getTranslation("ABS"),
-				},
-				{
-					VariableType: TYPE_FLOAT,
-					Float:        -42.42,
+					VariableType: TYPE_CALL,
+					String:       getTranslation("ABS") + "(-42.42)",
 				},
 			},
 			want: []VariableBox{
@@ -303,12 +295,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test SQR",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       getTranslation("SQR"),
-				},
-				{
-					VariableType: TYPE_INTEGER,
-					Integer:      4,
+					VariableType: TYPE_CALL,
+					String:       getTranslation("SQR") + "(4)",
 				},
 			},
 			want: []VariableBox{
@@ -322,12 +310,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test SIN",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       "SIN",
-				},
-				{
-					VariableType: TYPE_FLOAT,
-					Float:        math.Pi / 2,
+					VariableType: TYPE_CALL,
+					String:       "SIN(1.5707963267948966)",
 				},
 			},
 			want: []VariableBox{
@@ -341,12 +325,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test COS",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       "COS",
-				},
-				{
-					VariableType: TYPE_FLOAT,
-					Float:        0,
+					VariableType: TYPE_CALL,
+					String:       "COS(0)",
 				},
 			},
 			want: []VariableBox{
@@ -360,12 +340,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test TAN",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       "TAN",
-				},
-				{
-					VariableType: TYPE_FLOAT,
-					Float:        math.Pi / 4,
+					VariableType: TYPE_CALL,
+					String:       "TAN(0.7853981633974483)",
 				},
 			},
 			want: []VariableBox{
@@ -379,12 +355,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test LOG",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       "LOG",
-				},
-				{
-					VariableType: TYPE_FLOAT,
-					Float:        math.E,
+					VariableType: TYPE_CALL,
+					String:       "LOG(2.718281828459045)",
 				},
 			},
 			want: []VariableBox{
@@ -398,12 +370,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test ASIN",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       "ASIN",
-				},
-				{
-					VariableType: TYPE_FLOAT,
-					Float:        1,
+					VariableType: TYPE_CALL,
+					String:       "ASIN(1)",
 				},
 			},
 			want: []VariableBox{
@@ -417,12 +385,8 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 			name: "Test ACOS",
 			arguments: []VariableBox{
 				{
-					VariableType: TYPE_STRING,
-					String:       "ACOS",
-				},
-				{
-					VariableType: TYPE_FLOAT,
-					Float:        1,
+					VariableType: TYPE_CALL,
+					String:       "ACOS(1)",
 				},
 			},
 			want: []VariableBox{
@@ -451,25 +415,28 @@ func TestEvaluateInlineFunctions(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := evaluateInlineFunctions(tt.arguments)
+			got, err := evaluateFunctionCalls(KLMemory{}, nil, tt.arguments)
+			if err != nil {
+				t.Fatalf("evaluateFunctionCalls() error = %v", err)
+			}
 			if len(got) != len(tt.want) {
-				t.Errorf("evaluateInlineFunctions() = %v, want %v", got, tt.want)
+				t.Errorf("evaluateFunctionCalls() = %v, want %v", got, tt.want)
 				return
 			}
 			for i := range got {
 				if got[i].VariableType != tt.want[i].VariableType {
-					t.Errorf("evaluateInlineFunctions() = %v, want %v", got[i].VariableType, tt.want[i].VariableType)
+					t.Errorf("evaluateFunctionCalls() = %v, want %v", got[i].VariableType, tt.want[i].VariableType)
 				}
 				if tt.want[i].VariableType == TYPE_INTEGER && got[i].Integer == 0 {
-					t.Errorf("evaluateInlineFunctions() = %v, want non-zero integer", got[i].Integer)
+					t.Errorf("evaluateFunctionCalls() = %v, want non-zero integer", got[i].Integer)
 				}
 				if tt.want[i].VariableType == TYPE_STRING && tt.want[i].String == "" {
 					if _, err := time.Parse("Monday, January 2, 2006 15:03:05", got[i].String); err != nil {
-						t.Errorf("evaluateInlineFunctions() = %v, want valid date", got[i].String)
+						t.Errorf("evaluateFunctionCalls() = %v, want valid date", got[i].String)
 					}
 				}
 				if tt.want[i].VariableType == TYPE_FLOAT && !almostEqual(got[i].Float, tt.want[i].Float) {
-					t.Errorf("evaluateInlineFunctions() = %v, want %v", got[i].Float, tt.want[i].Float)
+					t.Errorf("evaluateFunctionCalls() = %v, want %v", got[i].Float, tt.want[i].Float)
 				}
 			}
 		})

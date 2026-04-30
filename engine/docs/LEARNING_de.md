@@ -161,22 +161,22 @@ KidLang hat spezielle Mathe-Kräfte!
 
 ```kidlang
 // Quadratwurzel (welche Zahl mit sich selbst multipliziert ergibt das?)
-kiste a = sqrt 16
+kiste a = wurzel(16)
 schreib kiste a
 // Ergebnis: 4 (weil 4 × 4 = 16)
 
 // Quadrat (eine Zahl mit sich selbst multiplizieren)
-kiste b = sqr 5
+kiste b = quadrat(5)
 schreib kiste b
 // Ergebnis: 25 (weil 5 × 5 = 25)
 
 // Absoluter Wert (Minuszeichen entfernen)
-kiste c = abs -10
+kiste c = betrag(-10)
 schreib kiste c
 // Ergebnis: 10
 
 // Zufallszahl zwischen 0 und 1
-kiste d = random
+kiste d = zufall()
 schreib Du hast bekommen: kiste d
 ```
 
@@ -317,7 +317,7 @@ Rechne Temperaturen von Fahrenheit in Celsius um!
 (Tipp: Celsius = (Fahrenheit - 32) × 5 / 9)
 
 ### 3. 🎲 Würfelwerfer
-Benutze `random`, um Würfelwürfe zu simulieren!
+Benutze `zufall()`, um Würfelwürfe zu simulieren!
 
 ### 4. 📊 Notenrechner
 Frage nach Testergebnissen und berechne den Durchschnitt!

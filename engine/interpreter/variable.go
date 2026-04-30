@@ -3,11 +3,9 @@ package interpreter
 import (
 	"fmt"
 	"math"
-	"math/rand"
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 const (
@@ -19,6 +17,7 @@ const (
 	TYPE_BOOL      = 4
 	TYPE_REFERENCE = 5 // Reference to another variable, for function arguments
 	TYPE_FILE      = 6
+	TYPE_CALL      = 7
 )
 
 var NumericTypes = []int{
@@ -37,25 +36,6 @@ var Specials = []SpecialVariable{
 			return VariableBox{
 				VariableType: TYPE_STRING,
 				String:       "\n",
-			}
-		},
-	},
-	{
-		Pattern: "RANDOM",
-		Function: func() VariableBox {
-			return VariableBox{
-				VariableType: TYPE_INTEGER,
-				Integer:      int64(rand.Int63()),
-			}
-		},
-	},
-	{
-		Pattern: "NOW",
-		Function: func() VariableBox {
-			now := time.Now()
-			return VariableBox{
-				VariableType: TYPE_STRING,
-				String:       now.Format("Monday, January 2, 2006 15:03:05"),
 			}
 		},
 	},
@@ -99,6 +79,8 @@ func (v VariableBox) ToString() string {
 		return v.String
 	case TYPE_REFERENCE:
 		return v.String // No memory context here
+	case TYPE_CALL:
+		return v.String
 	case TYPE_BOOL:
 		if v.Bool {
 			return "True"

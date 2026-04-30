@@ -71,10 +71,12 @@ Each test consists of:
 42. **42_newline_char** - Newline special variable
 43. **43_all_comparisons** - All comparison operators (=, !=, <, >, <=, >=)
 44. **45_implicit_print** - Implicit printing (text without command)
+45. **49_user_functions** - User-defined functions with implicit and explicit returns
+46. **50_function_library** - Builtin function library calls for math and strings
 
 ## Test Coverage
 
-**Current Status:** 47/47 tests passing (100% coverage) ✓
+**Current Status:** 50/50 tests passing (100% coverage) ✓
 
 All major KidLang features are tested including:
 - Core commands (print, ask, exec, sleep)
@@ -85,7 +87,7 @@ All major KidLang features are tested including:
 - All comparison operators
 - Conditionals with complex AND/OR chains
 - Labels and goto
-- Special variables (random, now, \n)
+- Builtin functions (`random()`, `now()`, math, string helpers) and special values (`\n`)
 - Implicit printing
 - Multi-language support (EN, TR, DE, FI)
 - **README examples validated**

@@ -16,6 +16,7 @@ type KLStack struct {
 	Error     *KLError `json:"error"`
 	ExitScope bool     `json:"exit_scope"`
 	JumpLabel *string  `json:"jump_label"`
+	Program   *Program `json:"-"`
 
 	// IO Control
 	IN     *os.File

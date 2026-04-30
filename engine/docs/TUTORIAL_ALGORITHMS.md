@@ -480,7 +480,7 @@ if box i > box count then
     goto analyze
 end
 
-box num = random % 100
+box num = random() % 100
 print Number box i: box num
 
 // Update sum
@@ -520,7 +520,7 @@ ask Choose (1=Rock, 2=Paper, 3=Scissors):
 box player = answer
 
 // AI makes a choice
-box ai_choice = random % 3 + 1
+box ai_choice = random() % 3 + 1
 
 print You chose: box player
 print AI chose: box ai_choice

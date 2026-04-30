@@ -2,6 +2,8 @@
 
 Welcome to the KidLang examples directory! Here you'll find various programs to help you learn KidLang programming.
 
+Builtin functions now use call syntax such as `random()`, `sqrt(16)`, and `len(box name)`.
+
 ## How to Run
 
 ```bash
@@ -30,11 +32,26 @@ kidlang examples/01_hello_world.kid
 10. **10_todo_list.kid** - Manage tasks with file operations.
 11. **11_random_story.kid** - Generate funny random stories.
 12. **12_simple_game.kid** - Adventure game with health, gold, and random events.
+13. **13_stack_demo.kid** - Work with stack values and keyed entries.
+14. **15_logic_operators.kid** - Explore logical comparisons and condition chains.
+15. **16_functions_sticker_party.kid** - Learn simple functions with stickers and names.
+16. **17_functions_pet_show.kid** - See functions call other functions in a pet show.
 
 ### Turkish Examples (Türkçe Örnekler)
 
-13. **13_turkish_merhaba.kid** - Hello World in Turkish.
-14. **14_turkish_sayi_tahmin.kid** - Number guessing game in Turkish.
+15. **13_turkish_merhaba.kid** - Hello World in Turkish.
+16. **14_turkish_sayi_tahmin.kid** - Number guessing game in Turkish.
+
+### Additional Language Examples
+
+17. **hello_de.kid** - Hello World in German.
+18. **hello_fi.kid** - Hello World in Finnish.
+19. **math_de.kid** - Simple math in German.
+20. **math_fi.kid** - Simple math in Finnish.
+21. **liste_de.kid** - Stack examples in German.
+22. **liste_tr.kid** - Stack examples in Turkish.
+23. **lista_fi.kid** - Stack examples in Finnish.
+24. **stack_file_demo.kid** - Combine stack and file operations.
 
 ## Learning Path
 
@@ -54,8 +71,12 @@ kidlang examples/01_hello_world.kid
 - Challenge yourself with examples 10-12
 - Build complete programs with multiple features
 
+**Week 5:**
+- Try examples 16-17
+- Learn how to build and reuse your own functions
+
 **Turkish Speakers:**
-- Examples 13-14 show how to use KidLang in Turkish!
+- Examples 15-16 show how to use KidLang in Turkish!
 
 ## Tips for Learning
 
@@ -75,7 +96,8 @@ After completing these examples, try to:
 
 ## Need Help?
 
-- Read the [Programming Guide](../PROGRAMMING_GUIDE.md)
+- Read the [Learning Guide](../engine/docs/LEARNING.md)
+- Check the [Command Reference](../engine/docs/COMMAND_REFERENCE.md)
 - Check error messages carefully
 - Use `--debug` flag to see what's happening: `kidlang --debug myfile.kid`
 - Start simple and add complexity gradually

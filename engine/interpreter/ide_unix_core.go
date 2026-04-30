@@ -80,6 +80,7 @@ func (ide *UnixIDE) Init() error {
 		goncurses.InitPair(6, goncurses.C_GREEN, goncurses.C_BLACK)   // Comments - green on black
 		goncurses.InitPair(7, goncurses.C_YELLOW, goncurses.C_BLACK)  // Line numbers - yellow on black
 		goncurses.InitPair(8, goncurses.C_MAGENTA, goncurses.C_BLACK) // Numbers - magenta on black
+		goncurses.InitPair(9, goncurses.C_BLUE, goncurses.C_BLACK)    // Functions - blue on black
 	}
 
 	ide.maxY, ide.maxX = ide.screen.MaxYX()

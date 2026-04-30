@@ -161,22 +161,22 @@ KidLang'in özel matematik güçleri var!
 
 ```kidlang
 // Karekök (hangi sayı kendisiyle çarpılınca bunu verir?)
-kutu a = sqrt 16
+kutu a = karekok(16)
 yaz kutu a
 // Sonuç: 4 (çünkü 4 × 4 = 16)
 
 // Kare (bir sayıyı kendisiyle çarp)
-kutu b = sqr 5
+kutu b = kare(5)
 yaz kutu b
 // Sonuç: 25 (çünkü 5 × 5 = 25)
 
 // Mutlak değer (eksi işaretini kaldır)
-kutu c = abs -10
+kutu c = mod(-10)
 yaz kutu c
 // Sonuç: 10
 
 // 0 ile 1 arasında rastgele sayı
-kutu d = random
+kutu d = rastgele()
 yaz Sonuc: kutu d
 ```
 
@@ -317,7 +317,7 @@ Fahrenheit'ı Celsius'a çevir!
 (İpucu: Celsius = (Fahrenheit - 32) × 5 / 9)
 
 ### 3. 🎲 Zar Atıcı
-Zar atmayı simüle etmek için `random` kullan!
+Zar atmayı simüle etmek için `rastgele()` kullan!
 
 ### 4. 📊 Not Hesaplayıcı
 Sınav notlarını sor ve ortalamayı hesapla!
