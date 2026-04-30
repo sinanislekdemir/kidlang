@@ -1,0 +1,2 @@
+#!/bin/bash
+printf "hei" > kidlang_fi_builtin.txt

@@ -64,15 +64,17 @@ laatikko tulos = 2 ^ 3  // XOR numeroille, salaus merkkijonoille
 
 ## Matemaattiset Funktiot
 ```
-neliojuuri 16     // Neliöjuuri
-itseisarvo -5     // Itseisarvo
-nelio 4           // Neliö (4*4)
+neliojuuri(16)    // Neliöjuuri
+itseisarvo(-5)    // Itseisarvo
+nelio(4)          // Neliö (4*4)
 sin(1.57)         // Sini
 cos(0)            // Kosini
 tan(0.785)        // Tangentti
 log(2.718)        // Luonnollinen logaritmi
 asin(0.5)         // Arkussini
 acos(0.5)         // Arkuskosini
+min(3, 7)         // Pienempi arvo
+max(3, 7)         // Suurempi arvo
 ```
 
 ## Merkkijono-operaatiot
@@ -81,6 +83,40 @@ laatikko teksti = hei + maailma    // Yhdistäminen (lainausmerkit valinnaisia)
 laatikko teksti = hei - e          // Poista kaikki 'e' merkit
 laatikko teksti = abc * 3          // Toista merkkijono
 laatikko merkki = hei / 2          // Hae merkki indeksistä 2
+```
+
+## Tekstiapufunktiot
+```
+pituus(hei)
+pienet(HEI)
+isot(hei)
+siisti(kidlang)
+sisaltaa(kidlang, lang)
+alkaa(kidlang, kid)
+paattyy(kidlang, lang)
+korvaa(kidlang, kid, peli)
+pala(kidlang, 2, 3)
+paikka(kidlang, lang)
+laatikko osat = jaa(punainen|sininen|vihrea, |)
+yhdista(laatikko osat, :)
+```
+
+## Tiedostoapufunktiot
+```
+onkotiedosto(tiedostoni)
+luetiedosto(tiedostoni)
+tiedostonkoko(tiedostoni)
+```
+
+## Lista-apufunktiot
+```
+laitalistaan(lelut, 1, robotti)
+haelistasta(lelut, 1)
+onkolistassa(lelut, 1)
+laatikko avaimet = listanavaimet(lelut)
+yhdista(laatikko avaimet, :)
+listanpituus(lelut)
+poistalistasta(lelut, 1)
 ```
 
 ## Ehdolliset Lauseet
@@ -137,8 +173,8 @@ sulje tiedostoni               // Sulje tiedosto
 
 ## Erikoisarvot
 ```
-satunnainen  // Satunnainen kokonaisluku
-aika         // Nykyinen päivämäärä/aika
+satunnainen()  // Satunnainen kokonaisluku
+aika()         // Nykyinen päivämäärä/aika
 \n           // Rivinvaihto
 ```
 

@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -184,26 +183,7 @@ func WriteFile(memory KLMemory, stack *KLStack, arguments []VariableBox) error {
 	if stackToWrite != nil {
 		writer := bufio.NewWriter(memory[fileVarName].fileHandler)
 
-		// Collect and sort keys
-		keys := make([]string, 0, len(stackToWrite.StackData))
-		for key := range stackToWrite.StackData {
-			keys = append(keys, key)
-		}
-
-		// Sort keys: try numeric first, fallback to string
-		sort.Slice(keys, func(i, j int) bool {
-			// Try to parse as integers
-			numI, errI := strconv.ParseInt(keys[i], 10, 64)
-			numJ, errJ := strconv.ParseInt(keys[j], 10, 64)
-
-			// If both are numbers, compare numerically
-			if errI == nil && errJ == nil {
-				return numI < numJ
-			}
-
-			// Otherwise, compare as strings
-			return keys[i] < keys[j]
-		})
+		keys := sortedStackKeys(stackToWrite.StackData)
 
 		// Write each stack value as a line in sorted order
 		for _, key := range keys {

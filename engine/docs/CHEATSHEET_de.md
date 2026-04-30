@@ -64,15 +64,17 @@ kiste ergebnis = 2 ^ 3  // XOR für Zahlen, Verschlüsselung für Strings
 
 ## Mathematische Funktionen
 ```
-wurzel 16     // Quadratwurzel
-betrag -5     // Absolutwert
-quadrat 4     // Quadrat (4*4)
+wurzel(16)    // Quadratwurzel
+betrag(-5)    // Absolutwert
+quadrat(4)    // Quadrat (4*4)
 sin(1.57)     // Sinus
 cos(0)        // Kosinus
 tan(0.785)    // Tangens
 log(2.718)    // Natürlicher Logarithmus
 asin(0.5)     // Arkussinus
 acos(0.5)     // Arkuskosinus
+min(3, 7)     // Kleinerer Wert
+max(3, 7)     // Größerer Wert
 ```
 
 ## String-Operationen
@@ -81,6 +83,40 @@ kiste text = hallo + welt      // Verkettung (Anführungszeichen optional)
 kiste text = hallo - l         // Entfernt alle 'l' Zeichen
 kiste text = abc * 3           // String wiederholen
 kiste zeichen = hallo / 2      // Zeichen am Index 2 holen
+```
+
+## Text-Hilfsfunktionen
+```
+laenge(hallo)
+klein(HALLO)
+gross(hallo)
+saeuber(kidlang)
+enthaelt(kidlang, lang)
+beginntmit(kidlang, kid)
+endetmit(kidlang, lang)
+ersetze(kidlang, kid, spiel)
+teil(kidlang, 2, 3)
+stelle(kidlang, lang)
+kiste teile = teile(rot|blau|gruen, |)
+verbinde(kiste teile, :)
+```
+
+## Datei-Hilfsfunktionen
+```
+gibtsdatei(meinedatei)
+liesdatei(meinedatei)
+dateigroesse(meinedatei)
+```
+
+## Listen-Hilfsfunktionen
+```
+listesetz(spielzeuge, 1, roboter)
+listehol(spielzeuge, 1)
+listehat(spielzeuge, 1)
+kiste schluessel = listeschluessel(spielzeuge)
+verbinde(kiste schluessel, :)
+listenlaenge(spielzeuge)
+listeloesch(spielzeuge, 1)
 ```
 
 ## Bedingungen
@@ -137,8 +173,8 @@ schliesse meinedatei           // Schließt Datei
 
 ## Spezialwerte
 ```
-zufall  // Zufällige Ganzzahl
-zeit    // Aktuelles Datum/Uhrzeit
+zufall()  // Zufällige Ganzzahl
+zeit()    // Aktuelles Datum/Uhrzeit
 \n      // Zeilenumbruch
 ```
 

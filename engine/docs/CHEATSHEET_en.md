@@ -90,6 +90,33 @@ box char = hello / 2       // Get character at index 2
 len(hello)        // Text length
 lower(HELLO)      // hello
 upper(hello)      // HELLO
+trim(kidlang)     // Remove spaces around text
+contains(kidlang, lang)
+startswith(kidlang, kid)
+endswith(kidlang, lang)
+replace(kidlang, kid, play)
+substring(kidlang, 2, 3)
+indexof(kidlang, lang)
+box pieces = split(red|blue|green, |)
+join(box pieces, :)
+```
+
+## File Helper Functions
+```
+fileexists(myfile)     // True if file exists
+fileread(myfile)       // Read all text from file
+filesize(myfile)       // File size in bytes
+```
+
+## Stack Helper Functions
+```
+stackset(toys, 1, robot)
+stackget(toys, 1)
+stackhas(toys, 1)
+box keys = stackkeys(toys)
+join(box keys, :)
+stacklen(toys)
+stackdelete(toys, 1)
 ```
 
 ## Functions

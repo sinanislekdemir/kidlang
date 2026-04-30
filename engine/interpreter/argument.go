@@ -274,16 +274,13 @@ OUTER:
 			if err != nil {
 				return nil, err
 			}
-			result[index].VariableType = value.VariableType
-			result[index].Integer = value.Integer
-			result[index].String = value.String
-			result[index].Float = value.Float
+			result[index] = cloneVariableBox(*value)
 		case TYPE_CALL:
 			value, err := evaluateFunctionCall(memory, stack, arguments[index].String)
 			if err != nil {
 				return nil, err
 			}
-			result[index] = value
+			result[index] = cloneVariableBox(value)
 		case TYPE_STRING:
 			answerKw := ADDRESS_ANSWER
 
@@ -322,12 +319,7 @@ OUTER:
 			result[index].VariableType = TYPE_STRING
 			result[index].String = arguments[index].String
 		default:
-			// do nothing
-			result[index].VariableType = arguments[index].VariableType
-			result[index].Float = arguments[index].Float
-			result[index].Integer = arguments[index].Integer
-			result[index].String = arguments[index].String
-			result[index].Bool = arguments[index].Bool
+			result[index] = cloneVariableBox(arguments[index])
 		}
 	}
 	return result, nil

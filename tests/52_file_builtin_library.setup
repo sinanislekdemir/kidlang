@@ -1,0 +1,2 @@
+#!/bin/bash
+printf "alpha\nbeta" > /tmp/kidlang_builtin_file_library.txt

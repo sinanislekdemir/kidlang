@@ -79,7 +79,7 @@ Welcome! This guide helps you find the right documentation for your learning lev
 - All commands with syntax and examples
 - Variables (box, stack, file)
 - Input/Output (print, ask)
-- Math operations, builtin functions, and user-defined functions
+- Math operations, builtin functions, expanded string/file/stack helper libraries, and user-defined functions
 - String operations
 - Control flow (if, goto, labels)
 - File operations
@@ -108,6 +108,7 @@ Quick one-page references in multiple languages:
 
 ### Sample Code Library
 📁 **[examples/](examples/)** - 20+ Working Programs
+- `engine/Examples/` - multilingual teaching programs, including the builtin helper lesson in each language folder
 
 **Beginner Examples:**
 - `01_hello_world.kid` - Your first program

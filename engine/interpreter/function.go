@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 )
@@ -28,65 +29,221 @@ type BuiltinFunction struct {
 	Name     string
 	Arity    int
 	Variadic bool
-	Run      func(arguments []VariableBox) (VariableBox, error)
+	Run      func(invocation BuiltinInvocation) (VariableBox, error)
 }
 
 var builtinFunctions = []BuiltinFunction{
-	{Name: "RANDOM", Arity: 0, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_INTEGER, Integer: rand.Int63()}, nil
+	{Name: "RANDOM", Arity: 0, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinInteger(rand.Int63()), nil
 	}},
-	{Name: "NOW", Arity: 0, Run: func(arguments []VariableBox) (VariableBox, error) {
+	{Name: "NOW", Arity: 0, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
 		now := time.Now()
-		return VariableBox{VariableType: TYPE_STRING, String: now.Format("Monday, January 2, 2006 15:03:05")}, nil
+		return builtinString(now.Format("Monday, January 2, 2006 15:03:05")), nil
 	}},
-	{Name: "SQRT", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_FLOAT, Float: math.Sqrt(arguments[0].ToFloat())}, nil
+	{Name: "SQRT", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinFloat(math.Sqrt(invocation.Arguments[0].ToFloat())), nil
 	}},
-	{Name: "ABS", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_FLOAT, Float: math.Abs(arguments[0].ToFloat())}, nil
+	{Name: "ABS", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinFloat(math.Abs(invocation.Arguments[0].ToFloat())), nil
 	}},
-	{Name: "SQR", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		value := arguments[0].ToFloat()
-		return VariableBox{VariableType: TYPE_FLOAT, Float: value * value}, nil
+	{Name: "SQR", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		value := invocation.Arguments[0].ToFloat()
+		return builtinFloat(value * value), nil
 	}},
-	{Name: "SIN", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_FLOAT, Float: math.Sin(arguments[0].ToFloat())}, nil
+	{Name: "SIN", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinFloat(math.Sin(invocation.Arguments[0].ToFloat())), nil
 	}},
-	{Name: "COS", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_FLOAT, Float: math.Cos(arguments[0].ToFloat())}, nil
+	{Name: "COS", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinFloat(math.Cos(invocation.Arguments[0].ToFloat())), nil
 	}},
-	{Name: "TAN", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_FLOAT, Float: math.Tan(arguments[0].ToFloat())}, nil
+	{Name: "TAN", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinFloat(math.Tan(invocation.Arguments[0].ToFloat())), nil
 	}},
-	{Name: "LOG", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_FLOAT, Float: math.Log(arguments[0].ToFloat())}, nil
+	{Name: "LOG", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinFloat(math.Log(invocation.Arguments[0].ToFloat())), nil
 	}},
-	{Name: "ASIN", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_FLOAT, Float: math.Asin(arguments[0].ToFloat())}, nil
+	{Name: "ASIN", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinFloat(math.Asin(invocation.Arguments[0].ToFloat())), nil
 	}},
-	{Name: "ACOS", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_FLOAT, Float: math.Acos(arguments[0].ToFloat())}, nil
+	{Name: "ACOS", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinFloat(math.Acos(invocation.Arguments[0].ToFloat())), nil
 	}},
-	{Name: "LEN", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_INTEGER, Integer: int64(len(arguments[0].ToString()))}, nil
+	{Name: "LEN", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinInteger(int64(len(invocation.Arguments[0].ToString()))), nil
 	}},
-	{Name: "LOWER", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_STRING, String: strings.ToLower(arguments[0].ToString())}, nil
+	{Name: "LOWER", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinString(strings.ToLower(invocation.Arguments[0].ToString())), nil
 	}},
-	{Name: "UPPER", Arity: 1, Run: func(arguments []VariableBox) (VariableBox, error) {
-		return VariableBox{VariableType: TYPE_STRING, String: strings.ToUpper(arguments[0].ToString())}, nil
+	{Name: "UPPER", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinString(strings.ToUpper(invocation.Arguments[0].ToString())), nil
 	}},
-	{Name: "MIN", Arity: 2, Run: func(arguments []VariableBox) (VariableBox, error) {
-		if arguments[0].ToFloat() <= arguments[1].ToFloat() {
-			return arguments[0], nil
+	{Name: "TRIM", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinString(strings.TrimSpace(invocation.Arguments[0].ToString())), nil
+	}},
+	{Name: "CONTAINS", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinBool(strings.Contains(invocation.Arguments[0].ToString(), invocation.Arguments[1].ToString())), nil
+	}},
+	{Name: "STARTSWITH", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinBool(strings.HasPrefix(invocation.Arguments[0].ToString(), invocation.Arguments[1].ToString())), nil
+	}},
+	{Name: "ENDSWITH", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinBool(strings.HasSuffix(invocation.Arguments[0].ToString(), invocation.Arguments[1].ToString())), nil
+	}},
+	{Name: "REPLACE", Arity: 3, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		return builtinString(strings.ReplaceAll(invocation.Arguments[0].ToString(), invocation.Arguments[1].ToString(), invocation.Arguments[2].ToString())), nil
+	}},
+	{Name: "SUBSTRING", Arity: 3, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		text := invocation.Arguments[0].ToString()
+		start := int(invocation.Arguments[1].ToFloat())
+		length := int(invocation.Arguments[2].ToFloat())
+
+		if start < 1 {
+			return VariableBox{}, fmt.Errorf("substring start must be at least 1")
 		}
-		return arguments[1], nil
-	}},
-	{Name: "MAX", Arity: 2, Run: func(arguments []VariableBox) (VariableBox, error) {
-		if arguments[0].ToFloat() >= arguments[1].ToFloat() {
-			return arguments[0], nil
+		if length < 0 {
+			return VariableBox{}, fmt.Errorf("substring length must not be negative")
 		}
-		return arguments[1], nil
+		if length == 0 || start > len(text) {
+			return builtinString(""), nil
+		}
+
+		startIndex := start - 1
+		endIndex := startIndex + length
+		if endIndex > len(text) {
+			endIndex = len(text)
+		}
+
+		return builtinString(text[startIndex:endIndex]), nil
+	}},
+	{Name: "INDEXOF", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		index := strings.Index(invocation.Arguments[0].ToString(), invocation.Arguments[1].ToString())
+		if index < 0 {
+			return builtinInteger(0), nil
+		}
+		return builtinInteger(int64(index + 1)), nil
+	}},
+	{Name: "SPLIT", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		text := invocation.Arguments[0].ToString()
+		delimiter := invocation.Arguments[1].ToString()
+		parts := strings.Split(text, delimiter)
+		stackValue := NewStack()
+		for index, part := range parts {
+			stackValue.SetInStack(fmt.Sprintf("%d", index+1), builtinString(part))
+		}
+		return stackValue, nil
+	}},
+	{Name: "JOIN", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		stackValue, err := expectStack(invocation.Arguments[0], "join")
+		if err != nil {
+			return VariableBox{}, err
+		}
+		keys := sortedStackKeys(stackValue.StackData)
+		parts := make([]string, 0, len(keys))
+		for _, key := range keys {
+			parts = append(parts, stackValue.StackData[key].ToString())
+		}
+		return builtinString(strings.Join(parts, invocation.Arguments[1].ToString())), nil
+	}},
+	{Name: "FILEEXISTS", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		path, err := resolveBuiltinFilePath(invocation.Arguments[0])
+		if err != nil {
+			return VariableBox{}, err
+		}
+		_, err = os.Stat(path)
+		if err == nil {
+			return builtinBool(true), nil
+		}
+		if os.IsNotExist(err) {
+			return builtinBool(false), nil
+		}
+		return VariableBox{}, err
+	}},
+	{Name: "FILEREAD", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		content, err := readBuiltinFileText(invocation.Arguments[0])
+		if err != nil {
+			return VariableBox{}, err
+		}
+		return builtinString(content), nil
+	}},
+	{Name: "FILESIZE", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		path, err := resolveBuiltinFilePath(invocation.Arguments[0])
+		if err != nil {
+			return VariableBox{}, err
+		}
+		stat, err := os.Stat(path)
+		if err != nil {
+			return VariableBox{}, err
+		}
+		return builtinInteger(stat.Size()), nil
+	}},
+	{Name: "STACKHAS", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		stackValue, err := expectStack(invocation.Arguments[0], "stackhas")
+		if err != nil {
+			return VariableBox{}, err
+		}
+		_, exists := stackValue.StackData[invocation.Arguments[1].ToString()]
+		return builtinBool(exists), nil
+	}},
+	{Name: "STACKGET", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		stackValue, err := expectStack(invocation.Arguments[0], "stackget")
+		if err != nil {
+			return VariableBox{}, err
+		}
+		return cloneVariableBox(stackValue.GetFromStack(invocation.Arguments[1].ToString())), nil
+	}},
+	{Name: "STACKSET", Arity: 3, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		stackKey, stackValue, err := stackReferenceKey(invocation.Memory, invocation.RawArguments[0], true)
+		if err != nil {
+			return VariableBox{}, err
+		}
+		valueToStore := cloneVariableBox(invocation.Arguments[2])
+		stackValue.SetInStack(invocation.Arguments[1].ToString(), valueToStore)
+		invocation.Memory[stackKey] = stackValue
+		return cloneVariableBox(valueToStore), nil
+	}},
+	{Name: "STACKDELETE", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		stackKey, stackValue, err := stackReferenceKey(invocation.Memory, invocation.RawArguments[0], false)
+		if err != nil {
+			return VariableBox{}, err
+		}
+		lookupKey := invocation.Arguments[1].ToString()
+		_, exists := stackValue.StackData[lookupKey]
+		if exists {
+			delete(stackValue.StackData, lookupKey)
+			invocation.Memory[stackKey] = stackValue
+		}
+		return builtinBool(exists), nil
+	}},
+	{Name: "STACKKEYS", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		stackValue, err := expectStack(invocation.Arguments[0], "stackkeys")
+		if err != nil {
+			return VariableBox{}, err
+		}
+		keys := sortedStackKeys(stackValue.StackData)
+		keyStack := NewStack()
+		for index, key := range keys {
+			keyStack.SetInStack(fmt.Sprintf("%d", index+1), builtinString(key))
+		}
+		return keyStack, nil
+	}},
+	{Name: "STACKLEN", Arity: 1, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		stackValue, err := expectStack(invocation.Arguments[0], "stacklen")
+		if err != nil {
+			return VariableBox{}, err
+		}
+		return builtinInteger(int64(len(stackValue.StackData))), nil
+	}},
+	{Name: "MIN", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		if invocation.Arguments[0].ToFloat() <= invocation.Arguments[1].ToFloat() {
+			return invocation.Arguments[0], nil
+		}
+		return invocation.Arguments[1], nil
+	}},
+	{Name: "MAX", Arity: 2, Run: func(invocation BuiltinInvocation) (VariableBox, error) {
+		if invocation.Arguments[0].ToFloat() >= invocation.Arguments[1].ToFloat() {
+			return invocation.Arguments[0], nil
+		}
+		return invocation.Arguments[1], nil
 	}},
 }
 
@@ -241,7 +398,12 @@ func evaluateFunctionCall(memory KLMemory, stack *KLStack, rawCall string) (Vari
 		if err := validateFunctionArity(call.Name, resolvedArguments, builtin.Arity, builtin.Variadic); err != nil {
 			return VariableBox{}, err
 		}
-		return builtin.Run(resolvedArguments)
+		return builtin.Run(BuiltinInvocation{
+			Memory:       memory,
+			Stack:        stack,
+			RawArguments: call.Arguments,
+			Arguments:    resolvedArguments,
+		})
 	}
 
 	if stack == nil || stack.Program == nil {

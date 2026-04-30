@@ -1,0 +1,10 @@
+box has_lang = contains(kidlang, lang)
+print box has_lang
+print startswith(kidlang, kid)
+print endswith(kidlang, lang)
+print replace(kidlang, kid, play)
+print substring(kidlang, 2, 3)
+print indexof(kidlang, lang)
+box pieces = split(red|blue|green, |)
+print join(box pieces, :)
+print stacklen(box pieces)

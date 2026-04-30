@@ -1,0 +1,2 @@
+#!/bin/bash
+printf "hallo" > kidlang_de_builtin.txt

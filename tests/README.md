@@ -73,10 +73,13 @@ Each test consists of:
 44. **45_implicit_print** - Implicit printing (text without command)
 45. **49_user_functions** - User-defined functions with implicit and explicit returns
 46. **50_function_library** - Builtin function library calls for math and strings
+47. **51_string_builtin_library** - Expanded string helper builtins such as `contains()`, `replace()`, `substring()`, `split()`, and `join()`
+48. **52_file_builtin_library** - File helper builtins such as `fileexists()`, `fileread()`, and `filesize()`
+49. **53_stack_builtin_library** - Stack helper builtins such as `stackset()`, `stackget()`, `stackkeys()`, `stacklen()`, and `stackdelete()`
 
 ## Test Coverage
 
-**Current Status:** 50/50 tests passing (100% coverage) ✓
+**Current Status:** 52/52 tests passing (100% coverage) ✓
 
 All major KidLang features are tested including:
 - Core commands (print, ask, exec, sleep)
@@ -87,7 +90,7 @@ All major KidLang features are tested including:
 - All comparison operators
 - Conditionals with complex AND/OR chains
 - Labels and goto
-- Builtin functions (`random()`, `now()`, math, string helpers) and special values (`\n`)
+- Builtin functions (`random()`, `now()`, math helpers, expanded string/file/stack helpers) and special values (`\n`)
 - Implicit printing
 - Multi-language support (EN, TR, DE, FI)
 - **README examples validated**

@@ -17,7 +17,7 @@
 - **Smart Type System**: Automatically handles numbers and text - kids don't worry about types
 - **Flexible Comparisons**: `"1"` equals `1` - the language figures it out
 - **Lists/Stacks**: Store collections with flexible indexing (e.g., `stack toys[1] = "robot"`)
-- **Functions**: Define reusable functions and call builtins like `sqrt(16)` or `len(box name)`
+- **Functions**: Define reusable functions and call builtins for math, strings, files, and stacks like `sqrt(16)`, `replace(kidlang, kid, play)`, or `stacklen(toys)`
 - **File Operations**: Read and write files easily
 - **Control Flow**: Simple if/goto for logic, loops for repetition
 - **Comments**: Use `//` to add notes to your code
@@ -82,6 +82,18 @@ print You won! The number was box secret
 end:
 ```
 
+### Builtin Helpers
+
+```kidlang
+box title = replace(kidlang, kid, play)
+print box title
+
+stack toys
+box saved = stackset(toys, 1, robot)
+print stacklen(toys)
+print stackget(toys, 1)
+```
+
 ## 🛠️ Building from Source
 
 ### Engine (Command Line Interpreter)
@@ -125,6 +137,7 @@ go test
 
 ### Example Programs
 - **[examples/](examples/)** - 20+ working programs to learn from
+- **[engine/Examples/](engine/Examples/)** - language-specific teaching programs, including builtin helper examples in English, Turkish, Finnish, and German
 
 ## 📖 Example Programs
 

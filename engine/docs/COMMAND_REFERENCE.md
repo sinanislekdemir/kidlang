@@ -195,7 +195,9 @@ print bigger(9, 4)
 | Group | Functions |
 |-------|-----------|
 | Math | `sqrt()`, `abs()`, `sqr()`, `sin()`, `cos()`, `tan()`, `log()`, `asin()`, `acos()`, `min()`, `max()` |
-| Text | `len()`, `lower()`, `upper()` |
+| Text | `len()`, `lower()`, `upper()`, `trim()`, `contains()`, `startswith()`, `endswith()`, `replace()`, `substring()`, `indexof()`, `split()`, `join()` |
+| Files | `fileexists()`, `fileread()`, `filesize()` |
+| Stacks | `stackhas()`, `stackget()`, `stackset()`, `stackdelete()`, `stackkeys()`, `stacklen()` |
 | Utility | `random()`, `now()` |
 
 **Builtin examples:**
@@ -203,8 +205,13 @@ print bigger(9, 4)
 print sqrt(16)
 print len(hello)
 print upper(kidlang)
+print replace(kidlang, kid, play)
+print contains(kidlang, lang)
 print min(3, 7)
 print max(3, 7)
+stack toys
+box saved = stackset(toys, 1, robot)
+print stacklen(toys)
 print random()
 ```
 
@@ -781,6 +788,88 @@ box timestamp = now()
 print Timestamp: box timestamp
 ```
 
+### Text helper functions
+
+Use these builtins when you want to inspect or reshape text inside an expression.
+
+| Function | What it does |
+|----------|---------------|
+| `len(text)` | Count characters in text |
+| `lower(text)` | Make text lowercase |
+| `upper(text)` | Make text uppercase |
+| `trim(text)` | Remove spaces from the start and end |
+| `contains(text, part)` | Check whether text includes another text |
+| `startswith(text, prefix)` | Check the beginning of text |
+| `endswith(text, suffix)` | Check the ending of text |
+| `replace(text, old, new)` | Replace all matching parts |
+| `substring(text, start, length)` | Take a piece of text using a 1-based start |
+| `indexof(text, part)` | Find where a piece starts, or `0` if it is missing |
+| `split(text, divider)` | Split text into a stack of pieces |
+| `join(stack_value, divider)` | Join stack values back into one text |
+
+**Examples:**
+```kidlang
+print trim(kidlang)
+print contains(kidlang, lang)
+print startswith(kidlang, kid)
+print endswith(kidlang, lang)
+print replace(kidlang, kid, play)
+print substring(kidlang, 2, 3)
+print indexof(kidlang, lang)
+box pieces = split(red|blue|green, |)
+print join(box pieces, :)
+```
+
+### File helper functions
+
+Use these builtins when you want file information inside an expression instead of a command.
+
+| Function | What it does |
+|----------|---------------|
+| `fileexists(file_or_name)` | Return `True` if the file exists |
+| `fileread(file_or_name)` | Read the whole file as text |
+| `filesize(file_or_name)` | Return the file size in bytes |
+
+These functions can use an open file variable such as `myfile`. The file helpers also accept a plain filename when the name does not need spaces or path separators.
+
+**Examples:**
+```kidlang
+file notes
+open notes helpernotes.txt
+print fileexists(notes)
+print fileread(notes)
+print filesize(notes)
+close notes
+```
+
+### Stack helper functions
+
+Use these builtins to check, read, change, and inspect stack values inside expressions.
+
+| Function | What it does |
+|----------|---------------|
+| `stackhas(stack_name, key)` | Return `True` if the key exists |
+| `stackget(stack_name, key)` | Read a value from the stack |
+| `stackset(stack_name, key, value)` | Save a value into the stack and return it |
+| `stackdelete(stack_name, key)` | Remove a key and return `True` if it was present |
+| `stackkeys(stack_name)` | Return a new stack containing the keys |
+| `stacklen(stack_name)` | Count how many values are stored |
+
+`split()` and `stackkeys()` return stack values, so you can store them in a box and pass them into other builtins like `join()` or `stacklen()`.
+
+**Examples:**
+```kidlang
+stack toys
+box first = stackset(toys, 1, robot)
+box second = stackset(toys, 2, kite)
+print stackhas(toys, 1)
+print stackget(toys, 2)
+box key_list = stackkeys(toys)
+print join(box key_list, :)
+print stacklen(toys)
+print stackdelete(toys, 1)
+```
+
 ### answer
 Special variable that stores user input from `ask`.
 
@@ -867,12 +956,12 @@ end:
 | **Variables** | `box`, `stack`, `file` |
 | **I/O** | `print`, `ask` |
 | **Math** | `+`, `-`, `*`, `/`, `%`, `^`, `sqrt()`, `abs()`, `sqr()`, `sin()`, `cos()`, `tan()`, `log()`, `asin()`, `acos()`, `min()`, `max()` |
-| **Text** | `len()`, `lower()`, `upper()` |
+| **Text** | `len()`, `lower()`, `upper()`, `trim()`, `contains()`, `startswith()`, `endswith()`, `replace()`, `substring()`, `indexof()`, `split()`, `join()` |
 | **Control** | `if...then...end`, `goto`, `label:` |
 | **Logic** | `and`, `or`, `=`, `!=`, `>`, `<`, `>=`, `<=` |
-| **Files** | `open`, `read`, `readline`, `write`, `seek`, `close` |
+| **Files** | `open`, `read`, `readline`, `write`, `seek`, `close`, `fileexists()`, `fileread()`, `filesize()` |
 | **System** | `exec`, `sleep` |
-| **Functions** | user-defined `function ... end`, optional `return`, `random()`, `now()` |
+| **Functions** | user-defined `function ... end`, optional `return`, stack helpers `stackhas()`/`stackget()`/`stackset()`/`stackdelete()`/`stackkeys()`/`stacklen()`, `random()`, `now()` |
 | **Special** | `answer`, `\n` |
 
 ---

@@ -64,15 +64,17 @@ kutu sonuc = 2 ^ 3  // Sayılar için XOR, metinler için şifreleme
 
 ## Matematik Fonksiyonları
 ```
-karekok 16    // Karekök
-mod -5        // Mutlak değer
-kare 4        // Kare (4*4)
+karekok(16)   // Karekök
+mod(-5)       // Mutlak değer
+kare(4)       // Kare (4*4)
 sin(1.57)     // Sinüs
 cos(0)        // Kosinüs
 tan(0.785)    // Tanjant
 log(2.718)    // Doğal logaritma
 asin(0.5)     // Arksinüs
 acos(0.5)     // Arkkosinüs
+min(3, 7)     // Küçük olan
+max(3, 7)     // Büyük olan
 ```
 
 ## Metin İşlemleri
@@ -81,6 +83,40 @@ kutu metin = merhaba + dünya   // Birleştirme (tırnak isteğe bağlı)
 kutu metin = merhaba - a       // Tüm 'a' karakterlerini çıkar
 kutu metin = abc * 3           // Metni tekrarla
 kutu harf = merhaba / 2        // 2. indeksteki karakteri al
+```
+
+## Metin Yardımcı Fonksiyonları
+```
+uzunluk(merhaba)
+kucukharf(MERHABA)
+buyukharf(merhaba)
+kirp(kidlang)
+icindevar(kidlang, lang)
+basliyormu(kidlang, kid)
+bitiyormu(kidlang, lang)
+degistir(kidlang, kid, oyun)
+parcaal(kidlang, 2, 3)
+kacinci(kidlang, lang)
+kutu parcalar = ayir(kirmizi|mavi|yesil, |)
+birlestir(kutu parcalar, :)
+```
+
+## Dosya Yardımcı Fonksiyonları
+```
+dosyavarmi(dosyam)
+dosyaoku(dosyam)
+dosyaboyu(dosyam)
+```
+
+## Liste Yardımcı Fonksiyonları
+```
+listeyekoy(oyuncaklar, 1, robot)
+listedenal(oyuncaklar, 1)
+listedevarmi(oyuncaklar, 1)
+kutu anahtarlar = listeanahtarlari(oyuncaklar)
+birlestir(kutu anahtarlar, :)
+listeuzunluk(oyuncaklar)
+listedensil(oyuncaklar, 1)
 ```
 
 ## Koşullar
@@ -137,8 +173,8 @@ kapat dosyam               // Dosyayı kapat
 
 ## Özel Değerler
 ```
-rastgele  // Rastgele tamsayı
-tarih     // Güncel tarih/saat
+rastgele()  // Rastgele tamsayı
+tarih()     // Güncel tarih/saat
 \n        // Yeni satır karakteri
 ```
 

@@ -212,8 +212,25 @@ KidLang also has built-in functions:
 ```kidlang
 print len(rainbow)
 print upper(hello)
+print replace(kidlang, kid, play)
+print contains(kidlang, lang)
 print min(4, 9)
 print max(4, 9)
+```
+
+Some builtins help with real programming jobs too:
+
+```kidlang
+stack toys
+box first = stackset(toys, 1, robot)
+box second = stackset(toys, 2, kite)
+print stacklen(toys)
+
+file notes
+open notes helpernotes.txt
+write notes apple|banana|carrot
+print fileread(notes)
+close notes
 ```
 
 ---

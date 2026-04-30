@@ -2,7 +2,7 @@
 
 Welcome to the KidLang examples directory! Here you'll find various programs to help you learn KidLang programming.
 
-Builtin functions now use call syntax such as `random()`, `sqrt(16)`, and `len(box name)`.
+Builtin functions now use call syntax such as `random()`, `sqrt(16)`, `replace(kidlang, kid, play)`, `fileexists(myfile)`, and `stackset(toys, 1, robot)`.
 
 ## How to Run
 
@@ -36,6 +36,8 @@ kidlang examples/01_hello_world.kid
 14. **15_logic_operators.kid** - Explore logical comparisons and condition chains.
 15. **16_functions_sticker_party.kid** - Learn simple functions with stickers and names.
 16. **17_functions_pet_show.kid** - See functions call other functions in a pet show.
+
+For more kid-focused builtin helper samples, check `engine/Examples/English/14_builtin_helpers.kid` and the matching Turkish, Finnish, and German versions in the same tree.
 
 ### Turkish Examples (Türkçe Örnekler)
 
@@ -98,6 +100,7 @@ After completing these examples, try to:
 
 - Read the [Learning Guide](../engine/docs/LEARNING.md)
 - Check the [Command Reference](../engine/docs/COMMAND_REFERENCE.md)
+- Explore `../engine/Examples/` for multilingual teaching examples, including builtin helper demos
 - Check error messages carefully
 - Use `--debug` flag to see what's happening: `kidlang --debug myfile.kid`
 - Start simple and add complexity gradually
