@@ -205,10 +205,31 @@ func (ide *WindowsIDE) showFileBrowser(openMode bool) {
 				}
 			}
 		case VK_RETURN:
-			if selectedIndex < len(fileList) {
+			if inputText != "" {
+				filename := inputText
+				if !strings.HasSuffix(filename, ".kid") {
+					filename += ".kid"
+				}
+				if openMode {
+					err := ide.LoadFile(filepath.Join(currentDir, filename))
+					if err != nil {
+						ide.showMessage("Error opening file: " + err.Error())
+					} else {
+						ide.draw()
+						return
+					}
+				} else {
+					err := ide.SaveFile(filepath.Join(currentDir, filename))
+					if err != nil {
+						ide.showMessage("Error saving file: " + err.Error())
+					} else {
+						ide.draw()
+						return
+					}
+				}
+			} else if selectedIndex < len(fileList) {
 				selected := fileList[selectedIndex]
 				if strings.HasSuffix(selected, "/") {
-					// Navigate to directory
 					if selected == "../" {
 						currentDir = filepath.Dir(currentDir)
 					} else {
@@ -217,7 +238,6 @@ func (ide *WindowsIDE) showFileBrowser(openMode bool) {
 					selectedIndex = 0
 					scrollOffset = 0
 				} else {
-					// Select file
 					if openMode {
 						err := ide.LoadFile(filepath.Join(currentDir, selected))
 						if err != nil {
