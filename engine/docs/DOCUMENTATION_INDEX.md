@@ -79,7 +79,7 @@ Welcome! This guide helps you find the right documentation for your learning lev
 - All commands with syntax and examples
 - Variables (box, stack, file)
 - Input/Output (print, ask)
-- Math operations and functions
+- Math operations, builtin functions, and user-defined functions
 - String operations
 - Control flow (if, goto, labels)
 - File operations

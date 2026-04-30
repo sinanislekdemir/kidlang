@@ -175,9 +175,45 @@ box c = abs(-10)
 print box c
 // Result: 10
 
-// Random number between 0 and 1
+// Random integer
 box d = random()
 print You got: box d
+```
+
+---
+
+## 🧩 Making Your Own Functions
+
+Functions let you give a name to a job you want to reuse.
+
+```kidlang
+function add_stickers(box red, box blue)
+box red + box blue
+end
+
+function cheer(box name)
+return Hooray, box name!
+end
+
+box total = add_stickers(3, 4)
+print box total
+print cheer(Mia)
+```
+
+Rules to remember:
+- Start with `function name(...)`
+- End with `end`
+- Use `return` when you want to send back a result right away
+- If you skip `return`, the last line becomes the result
+- Function calls use `()`
+
+KidLang also has built-in functions:
+
+```kidlang
+print len(rainbow)
+print upper(hello)
+print min(4, 9)
+print max(4, 9)
 ```
 
 ---

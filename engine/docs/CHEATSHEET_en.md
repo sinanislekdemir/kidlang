@@ -73,6 +73,8 @@ tan(0.785)    // Tangent
 log(2.718)    // Natural logarithm
 asin(0.5)     // Arcsine
 acos(0.5)     // Arccosine
+min(3, 7)     // Smaller value
+max(3, 7)     // Bigger value
 ```
 
 ## String Operations
@@ -82,6 +84,32 @@ box text = hello - l       // Remove all occurrences of character
 box text = abc * 3         // Repeat string
 box char = hello / 2       // Get character at index 2
 ```
+
+## Text Functions
+```
+len(hello)        // Text length
+lower(HELLO)      // hello
+upper(hello)      // HELLO
+```
+
+## Functions
+```
+function add(box a, box b)
+box a + box b
+end
+
+function greet(box name)
+return Hello, box name
+end
+
+box total = add(4, 5)
+print greet(Sam)
+```
+
+Notes:
+- Function calls use `()`
+- Stack indexing uses `[]`
+- `return` is optional
 
 ## Conditionals
 ```

@@ -809,14 +809,17 @@ box player_score = 0
 start:
 // Your main code here
 
-// === FUNCTIONS (using goto) ===
-display_stats:
-print Health: box player_health
-print Score: box player_score
-goto return_from_display
+// === FUNCTIONS ===
+function display_stats(box health, box score)
+print Health: box health
+print Score: box score
+print Version: box GAME_VERSION
+return box health
+end
 
 // === END ===
 end_game:
+box player_health = display_stats(box player_health, box player_score)
 print Game Over
 ```
 

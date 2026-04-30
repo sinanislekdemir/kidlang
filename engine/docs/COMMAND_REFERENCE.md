@@ -152,6 +152,7 @@ Define a reusable block that can return a value.
 **Syntax:**
 ```kidlang
 function function_name(box arg1, box arg2)
+// function body
 return expression
 end
 ```
@@ -167,16 +168,45 @@ box result = upper(box name)
 return Hello, box result
 end
 
+function bigger(box a, box b)
+if box a > box b then
+return box a
+end
+box b
+end
+
 box total = add(4, 5)
 print box total
 print decorate(kidlang)
+print bigger(9, 4)
 ```
 
 **Notes:**
 - Use `function ... end` blocks.
+- Call functions with parentheses, such as `add(4, 5)`.
+- Parameters are declared with their types, such as `box a` or `stack numbers`.
 - `return` is optional.
 - Without `return`, the last evaluated expression becomes the return value.
-- Builtin functions use the same call syntax, such as `sqrt(16)` and `len(box name)`.
+- Builtin functions use the same call syntax as user-defined functions.
+- Function calls use `()`. Stack indexing uses `[]`.
+
+**Builtin function library:**
+
+| Group | Functions |
+|-------|-----------|
+| Math | `sqrt()`, `abs()`, `sqr()`, `sin()`, `cos()`, `tan()`, `log()`, `asin()`, `acos()`, `min()`, `max()` |
+| Text | `len()`, `lower()`, `upper()` |
+| Utility | `random()`, `now()` |
+
+**Builtin examples:**
+```kidlang
+print sqrt(16)
+print len(hello)
+print upper(kidlang)
+print min(3, 7)
+print max(3, 7)
+print random()
+```
 
 ---
 
@@ -836,12 +866,13 @@ end:
 |----------|----------|
 | **Variables** | `box`, `stack`, `file` |
 | **I/O** | `print`, `ask` |
-| **Math** | `+`, `-`, `*`, `/`, `%`, `^`, `sqrt()`, `abs()`, `sqr()`, `sin()`, `cos()`, `tan()`, `log()`, `len()`, `lower()`, `upper()`, `min()`, `max()` |
+| **Math** | `+`, `-`, `*`, `/`, `%`, `^`, `sqrt()`, `abs()`, `sqr()`, `sin()`, `cos()`, `tan()`, `log()`, `asin()`, `acos()`, `min()`, `max()` |
+| **Text** | `len()`, `lower()`, `upper()` |
 | **Control** | `if...then...end`, `goto`, `label:` |
 | **Logic** | `and`, `or`, `=`, `!=`, `>`, `<`, `>=`, `<=` |
 | **Files** | `open`, `read`, `readline`, `write`, `seek`, `close` |
 | **System** | `exec`, `sleep` |
-| **Functions** | `random()`, `now()`, user-defined `function ... end`, optional `return` |
+| **Functions** | user-defined `function ... end`, optional `return`, `random()`, `now()` |
 | **Special** | `answer`, `\n` |
 
 ---
